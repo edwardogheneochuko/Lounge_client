@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "../schemas/authSchemas";
+import { loginSchema } from "../schemas/authSchemas"; // your Zod schema
 import { useNavigate, Link } from "react-router-dom";
 import useAuthStore from "../store/authStore";
 import SubmitBtn from "../components/SubmitBtn";
@@ -26,11 +26,18 @@ const Login = () => {
       setLoading(true);
       setServerError("");
 
-      // call Zustand login
+      // Call Zustand login
       await loginUser(data.email, data.password);
 
-      // redirect to home/dashboard
-      navigate("/");
+      // Get logged-in user from Zustand
+      const { user } = useAuthStore.getState();
+
+      // Redirect based on role
+      if (user?.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/shop");
+      }
     } catch (err) {
       setServerError(err.message || "Login failed");
     } finally {

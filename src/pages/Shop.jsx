@@ -4,10 +4,11 @@ import api from "../utils/api";
 
 function Shop() {
   const [products, setProducts] = useState([]);
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore(); // grab logout directly
 
   useEffect(() => {
-    api.get("/products")
+    api
+      .get("/products")
       .then((res) => setProducts(res.data))
       .catch((err) => {
         console.error("Failed to fetch products", err);
@@ -17,7 +18,6 @@ function Shop() {
   const addToCart = (product) => {
     let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-    // if product already in cart, increase quantity
     const existing = cart.find((item) => item._id === product._id);
     if (existing) {
       existing.quantity += 1;
@@ -32,7 +32,15 @@ function Shop() {
   return (
     <div>
       <h2>Shop</h2>
-      {user && <p>Welcome {user.email}</p>}
+      {user ? (
+        <div>
+          <p>Welcome {user.email}</p>
+          <button onClick={logout}>Logout</button>
+        </div>
+      ) : (
+        <p>You are not logged in</p>
+      )}
+
       {products.map((p) => (
         <div key={p._id}>
           <img src={p.image} alt={p.name} width="100" />
