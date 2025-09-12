@@ -3,7 +3,8 @@ import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import axios from "axios";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_URL || "https://lounge-server-149q.onrender.com/api"
+
 
 // Axios instance with token interceptor
 const api = axios.create({ baseURL: API_BASE });

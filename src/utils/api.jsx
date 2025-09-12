@@ -3,7 +3,7 @@ import useAuthStore from "../store/authStore";
 
 // Create axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+  baseURL: import.meta.env.VITE_API_URL || "https://lounge-server-149q.onrender.com/api",
 });
 
 // Add token automatically
