@@ -9,7 +9,6 @@ import SubmitBtn from "../components/SubmitBtn";
 const Login = () => {
   const navigate = useNavigate();
   const loginUser = useAuthStore((state) => state.login);
-
   const [loading, setLoading] = React.useState(false);
   const [serverError, setServerError] = React.useState("");
 
@@ -36,6 +35,7 @@ const Login = () => {
       if (user?.role === "admin") {
         navigate("/admin");
       } else {
+        
         navigate("/shop");
       }
     } catch (err) {
@@ -45,10 +45,10 @@ const Login = () => {
     }
   };
 
+
   return (
     <div className="flex items-center justify-center h-screen flex-col bg-gray-300">
       <h2 className="text-3xl font-bold mb-5 tracking-wider">Login</h2>
-
       <form onSubmit={handleSubmit(onSubmit)} className="grid space-y-3 w-80">
         {/* Email */}
         <label htmlFor="email" className="font-semibold text-xl">Email</label>

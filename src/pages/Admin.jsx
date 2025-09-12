@@ -4,6 +4,7 @@ import api from "../utils/api";
 
 function Admin() {
   const { user, logout } = useAuthStore();
+  const [activeTab, setActiveTab] = useState("products"); // sidebar tab
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [form, setForm] = useState({ name: "", price: "", image: null });
@@ -41,9 +42,7 @@ function Admin() {
 
   // Add product
   const addProduct = async () => {
-    if (!form.name || !form.price) {
-      return alert("Name and price are required");
-    }
+    if (!form.name || !form.price) return alert("Name and price are required");
 
     setLoading(true);
     try {
@@ -65,109 +64,149 @@ function Admin() {
     }
   };
 
-  if (!user || user.role !== "admin") {
-    return <p>Unauthorized – Admins only</p>;
-  }
+  if (!user || user.role !== "admin") return <p>Unauthorized – Admins only</p>;
 
   return (
-    <div style={{ maxWidth: "900px", margin: "20px auto", fontFamily: "Arial, sans-serif" }}>
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "30px" }}>
-        <h2>Admin Dashboard</h2>
-        <button
-          onClick={logout}
-          style={{
-            padding: "8px 16px",
-            backgroundColor: "#f44336",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer"
-          }}
-        >
-          Logout
-        </button>
-      </div>
-
-      {/* Add Product Form */}
-      <div style={{ marginBottom: "30px", padding: "20px", border: "1px solid #ddd", borderRadius: "8px", backgroundColor: "#f9f9f9" }}>
-        <h3>Add Product</h3>
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          <input
-            placeholder="Product Name"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
-          />
-          <input
-            type="number"
-            placeholder="Price"
-            value={form.price}
-            onChange={(e) => setForm({ ...form, price: e.target.value })}
-            style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setForm({ ...form, image: e.target.files[0] })}
-          />
-          {preview && (
-            <img src={preview} alt="preview" width="120" style={{ borderRadius: "4px", marginTop: "10px" }} />
-          )}
+    <div style={{ display: "flex", minHeight: "100vh", fontFamily: "Arial, sans-serif" }}>
+      {/* Sidebar */}
+      <aside style={{ width: "220px", backgroundColor: "#2c3e50", color: "#fff", padding: "20px" }}>
+        <h2 style={{ color: "#ecf0f1", marginBottom: "30px" }}>Admin Panel</h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
           <button
-            onClick={addProduct}
-            disabled={loading}
+            onClick={() => setActiveTab("products")}
             style={{
               padding: "10px",
-              backgroundColor: "#4CAF50",
-              color: "#fff",
+              textAlign: "left",
+              backgroundColor: activeTab === "products" ? "#34495e" : "transparent",
               border: "none",
               borderRadius: "4px",
+              color: "#fff",
               cursor: "pointer",
-              marginTop: "10px"
             }}
           >
-            {loading ? "Adding..." : "Add Product"}
+            Products
+          </button>
+          <button
+            onClick={() => setActiveTab("orders")}
+            style={{
+              padding: "10px",
+              textAlign: "left",
+              backgroundColor: activeTab === "orders" ? "#34495e" : "transparent",
+              border: "none",
+              borderRadius: "4px",
+              color: "#fff",
+              cursor: "pointer",
+            }}
+          >
+            Orders
+          </button>
+          <button
+            onClick={logout}
+            style={{
+              marginTop: "30px",
+              padding: "10px",
+              backgroundColor: "#e74c3c",
+              border: "none",
+              borderRadius: "4px",
+              color: "#fff",
+              cursor: "pointer",
+            }}
+          >
+            Logout
           </button>
         </div>
-      </div>
+      </aside>
 
-      {/* Products List */}
-      <div style={{ marginBottom: "30px" }}>
-        <h3>Products</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "15px" }}>
-          {products.map((p) => (
-            <div
-              key={p._id}
-              style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "10px", textAlign: "center", backgroundColor: "#fff" }}
-            >
-              <img
-                src={p.image || "/uploads/default.png"} // placeholder if no image
-                alt={p.name}
-                width="100%"
-                style={{ borderRadius: "4px" }}
-              />
-              <p style={{ fontWeight: "bold", margin: "10px 0 5px" }}>{p.name}</p>
-              <p>${p.price}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Main Content */}
+      <main style={{ flex: 1, padding: "30px", backgroundColor: "#ecf0f1" }}>
+        {/* Products Tab */}
+        {activeTab === "products" && (
+          <div>
+            <h2>Products</h2>
 
-      {/* Orders List */}
-      <div>
-        <h3>Orders</h3>
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          {orders.map((o) => (
-            <div key={o._id} style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "6px", backgroundColor: "#fefefe" }}>
-              <strong>Order #{o._id}</strong>
-              <p>User: {o.user?.email || "Unknown"}</p>
-              <p>Total: ${o.total}</p>
-              <p>Status: {o.status}</p>
+            {/* Add Product Form */}
+            <div style={{ margin: "20px 0", padding: "20px", borderRadius: "8px", backgroundColor: "#fff" }}>
+              <h3>Add New Product</h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                <input
+                  placeholder="Product Name"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
+                />
+                <input
+                  type="number"
+                  placeholder="Price"
+                  value={form.price}
+                  onChange={(e) => setForm({ ...form, price: e.target.value })}
+                  style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setForm({ ...form, image: e.target.files[0] })}
+                />
+                {form.image && (
+                  <img
+                    src={preview}
+                    alt="preview"
+                    width="120"
+                    style={{ borderRadius: "4px", marginTop: "10px" }}
+                  />
+                )}
+                <button
+                  onClick={addProduct}
+                  disabled={loading}
+                  style={{
+                    padding: "10px",
+                    backgroundColor: "#27ae60",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    marginTop: "10px",
+                  }}
+                >
+                  {loading ? "Adding..." : "Add Product"}
+                </button>
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
+
+            {/* Product Grid */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "20px" }}>
+              {products.map((p) => (
+                <div key={p._id} style={{ backgroundColor: "#fff", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
+                  <img
+                    src={p.image || "/uploads/default.png"}
+                    alt={p.name}
+                    width="100%"
+                    style={{ borderRadius: "4px" }}
+                  />
+                  <p style={{ fontWeight: "bold", margin: "10px 0 5px" }}>{p.name}</p>
+                  <p>${p.price}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Orders Tab */}
+        {activeTab === "orders" && (
+          <div>
+            <h2>Orders</h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+              {orders.map((o) => (
+                <div key={o._id} style={{ padding: "15px", borderRadius: "6px", backgroundColor: "#fff", border: "1px solid #ddd" }}>
+                  <strong>Order #{o._id}</strong>
+                  <p>User: {o.user?.email || "Unknown"}</p>
+                  <p>Total: ${o.total}</p>
+                  <p>Status: {o.status}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 }
