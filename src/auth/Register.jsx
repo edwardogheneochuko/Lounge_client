@@ -13,7 +13,8 @@ const Register = () => {
   const [loading, setLoading] = React.useState(false);
   const [serverError, setServerError] = React.useState("");
 
-  const borderStyles = "border border-neutral-500 py-3 rounded-md px-3";
+  const borderStyles =
+    "border border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500";
 
   const {
     register,
@@ -26,10 +27,7 @@ const Register = () => {
       setLoading(true);
       setServerError("");
 
-      // call Zustand register (sends Axios request)
       await registerUser(data.username, data.email, data.password);
-
-      // navigate to homepage (or dashboard)
       navigate("/");
     } catch (err) {
       setServerError(err.message || "Something went wrong");
@@ -39,76 +37,96 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen flex-col bg-gray-300">
-      <h2 className="text-3xl font-bold mb-5 tracking-wider">Register</h2>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-900 px-4">
+      <h2 className="text-4xl font-bold tracking-wide text-gray-200 mb-6">
+        Register
+      </h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="grid space-y-3 w-80">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-sm grid gap-4 bg-neutral-800 p-6 rounded-xl shadow-lg"
+      >
         {/* Username */}
-        <label htmlFor="username" className="font-semibold text-xl">
-          Username
-        </label>
-        <input
-          id="username"
-          type="text"
-          placeholder="Username"
-          className={borderStyles}
-          {...register("username")}
-        />
-        {errors.username && (
-          <p className="text-red-500 text-sm">{errors.username.message}</p>
-        )}
+        <div className="flex flex-col">
+          <label htmlFor="username" className="font-semibold text-gray-200 mb-1">
+            Username
+          </label>
+          <input
+            id="username"
+            type="text"
+            placeholder="Username"
+            className={borderStyles}
+            {...register("username")}
+          />
+          {errors.username && (
+            <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
+          )}
+        </div>
 
         {/* Email */}
-        <label htmlFor="email" className="font-semibold text-xl">Email</label>
-        <input
-          id="email"
-          type="text"
-          placeholder="Email"
-          className={borderStyles}
-          {...register("email")}
-        />
-        {errors.email && (
-          <p className="text-red-500 text-sm">{errors.email.message}</p>
-        )}
+        <div className="flex flex-col">
+          <label htmlFor="email" className="font-semibold text-gray-200 mb-1">
+            Email
+          </label>
+          <input
+            id="email"
+            type="text"
+            placeholder="Email"
+            className={borderStyles}
+            {...register("email")}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+          )}
+        </div>
 
         {/* Password */}
-        <label htmlFor="password" className="font-semibold text-xl">Password</label>
-        <input
-          id="password"
-          type="password"
-          placeholder="Password"
-          className={borderStyles}
-          {...register("password")}
-        />
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password.message}</p>
-        )}
+        <div className="flex flex-col">
+          <label htmlFor="password" className="font-semibold text-gray-200 mb-1">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            className={borderStyles}
+            {...register("password")}
+          />
+          {errors.password && (
+            <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+          )}
+        </div>
 
         {/* Confirm Password */}
-        <label htmlFor="confirmPassword" className="font-semibold text-xl">
-          Confirm Password
-        </label>
-        <input
-          id="confirmPassword"
-          type="password"
-          placeholder="Confirm Password"
-          className={borderStyles}
-          {...register("confirmPassword")}
-        />
-        {errors.confirmPassword && (
-          <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
-        )}
+        <div className="flex flex-col">
+          <label htmlFor="confirmPassword" className="font-semibold text-gray-200 mb-1">
+            Confirm Password
+          </label>
+          <input
+            id="confirmPassword"
+            type="password"
+            placeholder="Confirm Password"
+            className={borderStyles}
+            {...register("confirmPassword")}
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
+          )}
+        </div>
 
         {/* Server error */}
-        {serverError && <p className="text-red-600">{serverError}</p>}
+        {serverError && (
+          <p className="text-red-600 text-center font-medium">{serverError}</p>
+        )}
 
         {/* Submit button */}
         <SubmitBtn title="Register" loading={loading} />
       </form>
 
-      <div className="mt-3 text-gray-600">
-        Already have an account?
-        <Link to="/login" className="ml-2 hover:underline">
+      {/* Links */}
+      <div className="mt-4 text-gray-400 text-sm">
+        Already have an account?{" "}
+        <Link to="/login" className="text-pink-500 hover:underline">
           Login
         </Link>
       </div>

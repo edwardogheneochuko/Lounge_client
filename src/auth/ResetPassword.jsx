@@ -10,7 +10,9 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
   const [serverMessage, setServerMessage] = React.useState("");
-  const borderStyles = "border border-neutral-500 py-3 rounded-md px-3 w-full";
+
+  const borderStyles =
+    "border border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500";
 
   const {
     register,
@@ -45,46 +47,53 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen flex-col bg-gray-300">
-      <h2 className="text-3xl font-bold mb-5 tracking-wider">Reset Password</h2>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-900 px-4">
+      <h2 className="text-4xl font-bold tracking-wide text-gray-200 mb-6">
+        Reset Password
+      </h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="grid space-y-3 w-80">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-sm grid gap-4 bg-neutral-800 p-6 rounded-xl shadow-lg"
+      >
         {/* New Password */}
-        <label htmlFor="password" className="font-semibold text-xl">
-          New Password
-        </label>
-        <input
-          id="password"
-          type="password"
-          placeholder="New Password"
-          className={borderStyles}
-          {...register("password")}
-        />
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password.message}</p>
-        )}
+        <div className="flex flex-col">
+          <label htmlFor="password" className="font-semibold text-gray-200 mb-1">
+            New Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            placeholder="New Password"
+            className={borderStyles}
+            {...register("password")}
+          />
+          {errors.password && (
+            <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+          )}
+        </div>
 
         {/* Confirm Password */}
-        <label htmlFor="confirmPassword" className="font-semibold text-xl">
-          Confirm Password
-        </label>
-        <input
-          id="confirmPassword"
-          type="password"
-          placeholder="Confirm Password"
-          className={borderStyles}
-          {...register("confirmPassword")}
-        />
-        {errors.confirmPassword && (
-          <p className="text-red-500 text-sm">
-            {errors.confirmPassword.message}
-          </p>
-        )}
+        <div className="flex flex-col">
+          <label htmlFor="confirmPassword" className="font-semibold text-gray-200 mb-1">
+            Confirm Password
+          </label>
+          <input
+            id="confirmPassword"
+            type="password"
+            placeholder="Confirm Password"
+            className={borderStyles}
+            {...register("confirmPassword")}
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
+          )}
+        </div>
 
         {/* Server messages */}
         {serverMessage && (
           <p
-            className={`text-center ${
+            className={`text-center font-medium ${
               serverMessage.toLowerCase().includes("success")
                 ? "text-green-600"
                 : "text-red-600"
@@ -94,12 +103,14 @@ const ResetPassword = () => {
           </p>
         )}
 
+        {/* Submit button */}
         <SubmitBtn title="Reset Password" loading={loading} />
       </form>
 
+      {/* Back to login */}
       <Link
         to="/login"
-        className="hover:underline text-neutral-800 font-semibold mt-3 text-lg"
+        className="mt-4 text-pink-500 font-semibold hover:underline text-lg"
       >
         Back to Login
       </Link>
