@@ -1,4 +1,3 @@
-// src/pages/Admin.jsx
 import { useState, useEffect } from "react";
 import useAuthStore from "../store/authStore";
 import api from "../utils/api";
@@ -101,14 +100,12 @@ function Admin() {
 
   return (
     <div className="flex min-h-screen font-sans">
-      {/* Sidebar */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         logout={logout}
       />
 
-      {/* Main Content */}
       <main className="flex-1 p-8 bg-gray-200">
         {activeTab === "products" && (
           <div>
@@ -167,15 +164,12 @@ function Admin() {
                   key={p._id}
                   className="bg-white p-3 rounded-lg shadow text-center relative overflow-hidden"
                 >
-                  {/* Product Image with Slash when Out of Order */}
                   <div className="relative">
+                    {/* Product Image */}
                     <img
                       src={
                         p.image
-                          ? `${import.meta.env.VITE_API_URL.replace(
-                              "/api",
-                              ""
-                            )}${p.image}`
+                          ? `${import.meta.env.VITE_BASE_URL}${p.image}`
                           : "/uploads/default.png"
                       }
                       alt={p.name}
@@ -184,10 +178,10 @@ function Admin() {
                       }`}
                     />
 
+                    {/* Out-of-order Slash */}
                     {!p.available && (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        {/* Big Slash */}
-                        <div className="absolute w-[200%] h-1 bg-red-600 rotate-45"></div>
+                        <div className="absolute w-[250%] h-1 bg-red-600 rotate-45 opacity-80"></div>
                       </div>
                     )}
                   </div>
@@ -195,14 +189,14 @@ function Admin() {
                   {/* Product Info */}
                   <p
                     className={`font-semibold mt-2 ${
-                      !p.available ? "text-gray-600" : "text-black"
+                      !p.available ? "text-gray-700" : "text-black"
                     }`}
                   >
                     {p.name}
                   </p>
                   <p
                     className={`${
-                      !p.available ? "text-gray-600" : "text-black"
+                      !p.available ? "text-gray-700" : "text-black"
                     }`}
                   >
                     ${p.price}
@@ -223,8 +217,7 @@ function Admin() {
 
                     <button
                       onClick={() => deleteProduct(p._id)}
-                      className="px-3 py-1 rounded-md bg-red-600 hover:bg-red-700
-                       text-white cursor-pointer"
+                      className="px-3 py-1 rounded-md bg-red-600 hover:bg-red-700 text-white cursor-pointer"
                     >
                       Delete
                     </button>
