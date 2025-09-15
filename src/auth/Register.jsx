@@ -1,19 +1,21 @@
-import React from "react";
+import React, {useState} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "../schemas/authSchemas";
 import { useNavigate, Link } from "react-router-dom";
 import useAuthStore from "../store/authStore";
 import SubmitBtn from "../components/SubmitBtn";
+import Header from "../components/Header";
 
 const Register = () => {
   const navigate = useNavigate();
   const registerUser = useAuthStore((state) => state.register);
-  const [loading, setLoading] = React.useState(false);
-  const [serverError, setServerError] = React.useState("");
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState("");
 
-  const borderStyles = "border border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500";
-
+  const borderStyles = `border-2 border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 
+  placeholder:text-sm placeholder:md:text-base placeholder:tracking-wider placeholder:text-white
+   focus:outline-none focus:ring-2 focus:ring-pink-500`
   const {
     register,
     handleSubmit,
@@ -35,6 +37,7 @@ const Register = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-900 px-4">
+      <Header />
       <h2 className="text-4xl font-bold tracking-wide text-gray-200 mb-6">
         Register
       </h2>
@@ -68,7 +71,7 @@ const Register = () => {
           <input
             id="email"
             type="text"
-            placeholder="Email"
+            placeholder="your-email@gmail.com"
             className={borderStyles}
             {...register("email")}
           />

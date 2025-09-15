@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { resetPasswordSchema } from "../schemas/authSchemas";
 import SubmitBtn from "../components/SubmitBtn";
+import Header from "../components/Header";
+import axios from "axios";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -24,22 +26,19 @@ const ResetPassword = () => {
       setLoading(true);
       setServerMessage("");
 
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/forgot-password`,
-        {
-          method: "POST",
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/reset-password/${token}`,
+        data,{
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
         }
       );
 
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.message || "Something went wrong");
-
-      setServerMessage(result.message || "Password reset successfully!");
+      setServerMessage(res.data.message || "Password reset successfully!");
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      setServerMessage(err.message);
+      const errorMessage =
+      err.response?.data?.message || err.message || "Something went wrong";
+     setServerMessage(errorMessage);   
     } finally {
       setLoading(false);
     }
@@ -47,7 +46,8 @@ const ResetPassword = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-900 px-4">
-      <h2 className="text-4xl font-bold tracking-wide text-gray-200 mb-6">
+       <Header />
+      <h2 className="text-4xl font-bold tracking-wide text-gray-200 my-6">
         Reset Password
       </h2>
 

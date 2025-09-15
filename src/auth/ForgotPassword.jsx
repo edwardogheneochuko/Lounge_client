@@ -1,15 +1,20 @@
-import React from "react";
+import React, {useState} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forgotPasswordSchema } from "../schemas/authSchemas";
 import SubmitBtn from "../components/SubmitBtn";
 import { Link } from "react-router-dom";
+import Header from "../components/Header";
+import axios from "axios";
 
 
 const ForgotPassword = () => {
-  const borderStyles = "border border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500";
-  const [loading, setLoading] = React.useState(false);
-  const [serverMessage, setServerMessage] = React.useState("");
+   const borderStyles = `border-2 border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 
+  placeholder:text-sm placeholder:md:text-base placeholder:tracking-wider placeholder:text-white
+   focus:outline-none focus:ring-2 focus:ring-pink-500`
+
+  const [loading, setLoading] = useState(false);
+  const [serverMessage, setServerMessage] = useState("");
 
   const {
     register,
@@ -22,22 +27,18 @@ const ForgotPassword = () => {
       setLoading(true);
       setServerMessage("");
 
-      const res = await fetch(
-        "http://localhost:5000/api/auth/forgot-password",
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/forgot-password`,
+      data, 
         {
-          method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
         }
       );
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result.message || "Something went wrong");
-      }
-      setServerMessage(result.message || "Password reset link sent!");
+      setServerMessage(res.data.message || "Password reset link sent!");
     } catch (err) {
-      setServerMessage(err.message);
+      const errorMessage =  
+        err.response?.data?.message || err.message || "Something went wrong";
+      setServerMessage(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -46,7 +47,8 @@ const ForgotPassword = () => {
   
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-900 px-4">
-      <h2 className="text-4xl font-bold tracking-wide text-gray-200 mb-6">
+      <Header />
+      <h2 className="text-4xl font-bold tracking-wide text-gray-200 my-6">
         Forgot Password
       </h2>
 
@@ -62,7 +64,7 @@ const ForgotPassword = () => {
           <input
             id="email"
             type="text"
-            placeholder="Enter your email"
+            placeholder="your-email@gmail.com"
             className={borderStyles}
             {...register("email")}
           />
@@ -88,21 +90,13 @@ const ForgotPassword = () => {
       </form>
 
       {/* Links */}
-      <div className="mt-4 flex flex-col items-center gap-2 text-sm text-gray-400">
+
         <Link
           to="/login"
-          className="text-pink-500 font-semibold hover:underline text-lg"
-        >
+          className="text-pink-50 font-semibold hover:underline mt-5">
           Back to Login
         </Link>
 
-        <Link
-          to="/reset-password"
-          className="text-pink-500 font-semibold hover:underline text-lg"
-        >
-          Reset Page
-        </Link>
-      </div>
     </div>
   );
 };
