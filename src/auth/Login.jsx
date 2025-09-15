@@ -13,8 +13,7 @@ const Login = () => {
   const [loading, setLoading] = React.useState(false);
   const [serverError, setServerError] = React.useState("");
 
-  const borderStyles =
-    "border border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500";
+  const borderStyles = "border border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500";
 
   const {
     register,

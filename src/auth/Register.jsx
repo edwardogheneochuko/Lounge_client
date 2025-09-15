@@ -9,24 +9,21 @@ import SubmitBtn from "../components/SubmitBtn";
 const Register = () => {
   const navigate = useNavigate();
   const registerUser = useAuthStore((state) => state.register);
-
   const [loading, setLoading] = React.useState(false);
   const [serverError, setServerError] = React.useState("");
 
-  const borderStyles =
-    "border border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500";
+  const borderStyles = "border border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500";
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(registerSchema) });
+  } = useForm({ resolver: zodResolver(registerSchema)});
 
   const onSubmit = async (data) => {
     try {
       setLoading(true);
       setServerError("");
-
       await registerUser(data.username, data.email, data.password);
       navigate("/");
     } catch (err) {

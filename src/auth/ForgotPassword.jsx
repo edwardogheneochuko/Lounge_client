@@ -5,9 +5,9 @@ import { forgotPasswordSchema } from "../schemas/authSchemas";
 import SubmitBtn from "../components/SubmitBtn";
 import { Link } from "react-router-dom";
 
+
 const ForgotPassword = () => {
-  const borderStyles =
-    "border border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500";
+  const borderStyles = "border border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500";
   const [loading, setLoading] = React.useState(false);
   const [serverMessage, setServerMessage] = React.useState("");
 
@@ -30,13 +30,11 @@ const ForgotPassword = () => {
           body: JSON.stringify(data),
         }
       );
-
       const result = await res.json();
 
       if (!res.ok) {
         throw new Error(result.message || "Something went wrong");
       }
-
       setServerMessage(result.message || "Password reset link sent!");
     } catch (err) {
       setServerMessage(err.message);
@@ -45,6 +43,7 @@ const ForgotPassword = () => {
     }
   };
 
+  
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-900 px-4">
       <h2 className="text-4xl font-bold tracking-wide text-gray-200 mb-6">

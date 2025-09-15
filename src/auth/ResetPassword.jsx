@@ -11,8 +11,7 @@ const ResetPassword = () => {
   const [loading, setLoading] = React.useState(false);
   const [serverMessage, setServerMessage] = React.useState("");
 
-  const borderStyles =
-    "border border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500";
+  const borderStyles = "border border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500";
 
   const {
     register,
@@ -26,7 +25,7 @@ const ResetPassword = () => {
       setServerMessage("");
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/reset-password/${token}`,
+        `${import.meta.env.VITE_API_URL}/auth/forgot-password`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -111,7 +110,7 @@ const ResetPassword = () => {
       <Link
         to="/login"
         className="mt-4 text-pink-500 font-semibold hover:underline text-lg"
-      >
+        >
         Back to Login
       </Link>
     </div>
