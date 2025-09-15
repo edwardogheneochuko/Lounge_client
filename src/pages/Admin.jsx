@@ -14,10 +14,10 @@ function Admin() {
   const [loading, setLoading] = useState(false);
 
   const borderStyles = `border-2 border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 
-  placeholder:text-sm placeholder:md:text-base placeholder:tracking-wider placeholder:text-white
-   focus:outline-none focus:ring-2 focus:ring-pink-500`;
+    placeholder:text-sm placeholder:md:text-base placeholder:tracking-wider placeholder:text-white
+    focus:outline-none focus:ring-2 focus:ring-pink-500`;
 
-  // Fetch products + orders
+  // Load products + orders
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,7 +35,7 @@ function Admin() {
     fetchData();
   }, []);
 
-  // Preview uploaded image
+  // Preview image
   useEffect(() => {
     if (!form.image) {
       setPreview(null);
@@ -46,62 +46,67 @@ function Admin() {
     return () => URL.revokeObjectURL(objectUrl);
   }, [form.image]);
 
+  // Add product
   const addProduct = async () => {
-    if (!form.name || !form.price) return alert("Name and price are required");
-  
+    if (!form.name || !form.price)
+      return alert("Name and price are required");
+
     setLoading(true);
     try {
       const formData = new FormData();
       formData.append("name", form.name);
       formData.append("price", Number(form.price));
-  
-      // 👇 Important: must be "image"
       if (form.image) formData.append("image", form.image);
-  
+
       const res = await api.post("/products", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-  
+
       setProducts((prev) => [...prev, res.data]);
       setForm({ name: "", price: "", image: null });
+      setPreview(null);
     } catch (err) {
-      console.error(err);
       alert(err.response?.data?.message || "Failed to add product");
     } finally {
       setLoading(false);
     }
   };
-  
 
   // Delete product
   const deleteProduct = async (id) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
+
     try {
       await api.delete(`/products/${id}`);
       setProducts((prev) => prev.filter((p) => p._id !== id));
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete product");
+      alert("Failed to delete product");
     }
   };
 
   // Toggle availability
   const toggleAvailability = async (id) => {
     try {
-      const res = await api.patch(`/products/${id}/availability`);
+      const res = await api.patch(`/products/${id}/toggle`);
       setProducts((prev) =>
-        prev.map((p) => (p._id === id ? { ...p, available: res.data.available } : p))
+        prev.map((p) => (p._id === id ? res.data : p))
       );
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to update product");
+      alert("Failed to update status");
     }
   };
 
-  if (!user || user.role !== "admin") return <p>Unauthorized – Admins only</p>;
+  if (!user || user.role !== "admin")
+    return <p>Unauthorized – Admins only</p>;
 
   return (
     <div className="flex min-h-screen font-sans">
       {/* Sidebar */}
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} logout={logout} />
+      <Sidebar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        logout={logout}
+      />
 
       {/* Main Content */}
       <main className="flex-1 p-8 bg-gray-200">
@@ -116,23 +121,29 @@ function Admin() {
                 <input
                   placeholder="Product Name"
                   value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, name: e.target.value })
+                  }
                   className={borderStyles}
                 />
                 <input
                   type="number"
                   placeholder="Price"
                   value={form.price}
-                  onChange={(e) => setForm({ ...form, price: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, price: e.target.value })
+                  }
                   className={borderStyles}
                 />
                 <input
-                 type="file"
-                 accept="image/*"
-                onChange={(e) => setForm({ ...form, image: e.target.files[0] })}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    setForm({ ...form, image: e.target.files[0] })
+                  }
+                  className="p-2"
                 />
-
-                {form.image && (
+                {preview && (
                   <img
                     src={preview}
                     alt="preview"
@@ -154,35 +165,66 @@ function Admin() {
               {products.map((p) => (
                 <div
                   key={p._id}
-                  className="bg-white p-3 rounded-lg shadow text-center relative"
+                  className="bg-white p-3 rounded-lg shadow text-center relative overflow-hidden"
                 >
-                  <img
-                    src={p.image || "/uploads/default.png"}
-                    alt={p.name}
-                    className={`rounded-md w-full h-32 object-cover ${
-                      !p.available ? "opacity-50" : ""
-                    }`}
-                  />
+                  {/* Product Image with Slash when Out of Order */}
+                  <div className="relative">
+                    <img
+                      src={
+                        p.image
+                          ? `${import.meta.env.VITE_API_URL.replace(
+                              "/api",
+                              ""
+                            )}${p.image}`
+                          : "/uploads/default.png"
+                      }
+                      alt={p.name}
+                      className={`rounded-md w-full h-32 object-cover transition ${
+                        !p.available ? "grayscale opacity-60" : ""
+                      }`}
+                    />
+
+                    {!p.available && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        {/* Big Slash */}
+                        <div className="absolute w-[200%] h-1 bg-red-600 rotate-45"></div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Product Info */}
                   <p
                     className={`font-semibold mt-2 ${
-                      !p.available ? "line-through text-gray-500" : ""
+                      !p.available ? "text-gray-600" : "text-black"
                     }`}
                   >
                     {p.name}
                   </p>
-                  <p className="text-gray-600">${p.price}</p>
+                  <p
+                    className={`${
+                      !p.available ? "text-gray-600" : "text-black"
+                    }`}
+                  >
+                    ${p.price}
+                  </p>
 
                   {/* Actions */}
                   <div className="flex justify-center gap-2 mt-3">
                     <button
                       onClick={() => toggleAvailability(p._id)}
-                      className="px-3 py-1 text-sm rounded bg-yellow-500 hover:bg-yellow-600 text-white"
+                      className={`px-3 py-1 rounded-md text-white cursor-pointer ${
+                        p.available
+                          ? "bg-yellow-600 hover:bg-yellow-700"
+                          : "bg-green-600 hover:bg-green-700"
+                      }`}
                     >
-                      {p.available ? "Mark Out of Stock" : "Mark Available"}
+                      {p.available ? "Mark Out of Order" : "Mark Available"}
                     </button>
+
                     <button
                       onClick={() => deleteProduct(p._id)}
-                      className="px-3 py-1 text-sm rounded bg-red-600 hover:bg-red-700 text-white"
+                      className="px-3 py-1 rounded-md bg-red-600 hover:bg-red-700
+                       text-white cursor-pointer"
                     >
                       Delete
                     </button>
