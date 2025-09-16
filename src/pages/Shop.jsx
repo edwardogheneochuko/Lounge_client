@@ -51,7 +51,7 @@ function Shop() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
         {products.map((p) => (
           <div
             key={p._id}
@@ -66,7 +66,7 @@ function Shop() {
             />
             <h3 className="mt-2 font-semibold text-lg">{p.name}</h3>
             <p className={`text-md ${!p.available ? "text-gray-400" : "text-black"}`}>
-              ${p.price}
+            ₦{p.price}
             </p>
             {!p.available && (
               <span className="absolute top-2 left-2 bg-red-600 text-white px-2 py-1 text-xs rounded">

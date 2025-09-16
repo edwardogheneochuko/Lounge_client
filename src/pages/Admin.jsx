@@ -16,7 +16,6 @@ function Admin() {
     placeholder:text-sm placeholder:md:text-base placeholder:tracking-wider placeholder:text-white
     focus:outline-none focus:ring-2 focus:ring-pink-500`;
 
-  // Load products + orders
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,7 +33,6 @@ function Admin() {
     fetchData();
   }, []);
 
-  // Preview image
   useEffect(() => {
     if (!form.image) {
       setPreview(null);
@@ -45,11 +43,8 @@ function Admin() {
     return () => URL.revokeObjectURL(objectUrl);
   }, [form.image]);
 
-  // Add product
   const addProduct = async () => {
-    if (!form.name || !form.price)
-      return alert("Name and price are required");
-
+    if (!form.name || !form.price) return alert("Name and price are required");
     setLoading(true);
     try {
       const formData = new FormData();
@@ -71,7 +66,6 @@ function Admin() {
     }
   };
 
-  // Delete product
   const deleteProduct = async (id) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
 
@@ -83,30 +77,28 @@ function Admin() {
     }
   };
 
-  // Toggle availability
   const toggleAvailability = async (id) => {
     try {
       const res = await api.patch(`/products/${id}/toggle`);
-      setProducts((prev) =>
-        prev.map((p) => (p._id === id ? res.data : p))
-      );
+      setProducts((prev) => prev.map((p) => (p._id === id ? res.data : p)));
     } catch (err) {
       alert("Failed to update status");
     }
   };
 
-  if (!user || user.role !== "admin")
-    return <p>Unauthorized – Admins only</p>;
+  if (!user || user.role !== "admin") return <p>Unauthorized – Admins only</p>;
 
   return (
     <div className="flex min-h-screen font-sans">
+      {/* Fixed Sidebar */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         logout={logout}
       />
 
-      <main className="flex-1 p-8 bg-gray-200">
+      {/* Main scrollable content */}
+      <main className="flex-1 p-8 bg-gray-500 md:ml-56 overflow-auto max-h-screen">
         {activeTab === "products" && (
           <div>
             <h2 className="text-2xl font-bold mb-4">Products</h2>
@@ -118,26 +110,20 @@ function Admin() {
                 <input
                   placeholder="Product Name"
                   value={form.name}
-                  onChange={(e) =>
-                    setForm({ ...form, name: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
                   className={borderStyles}
                 />
                 <input
                   type="number"
                   placeholder="Price"
                   value={form.price}
-                  onChange={(e) =>
-                    setForm({ ...form, price: e.target.value })
-                  }
+                  onChange={(e) => setForm({ ...form, price: e.target.value })}
                   className={borderStyles}
                 />
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) =>
-                    setForm({ ...form, image: e.target.files[0] })
-                  }
+                  onChange={(e) => setForm({ ...form, image: e.target.files[0] })}
                   className="p-2"
                 />
                 {preview && (
@@ -150,7 +136,8 @@ function Admin() {
                 <button
                   onClick={addProduct}
                   disabled={loading}
-                  className="bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition"
+                  className="bg-green-800 text-white py-2 rounded-md 
+                  hover:bg-green-900 transition cursor-pointer"
                 >
                   {loading ? "Adding..." : "Add Product"}
                 </button>
@@ -165,20 +152,13 @@ function Admin() {
                   className="bg-white p-3 rounded-lg shadow text-center relative overflow-hidden"
                 >
                   <div className="relative">
-                    {/* Product Image */}
                     <img
-                      src={
-                        p.image
-                          ? `${import.meta.env.VITE_BASE_URL}${p.image}`
-                          : "/uploads/default.png"
-                      }
+                      src={p.image ? `${import.meta.env.VITE_BASE_URL}${p.image}` : "/uploads/default.png"}
                       alt={p.name}
                       className={`rounded-md w-full h-32 object-cover transition ${
                         !p.available ? "grayscale opacity-60" : ""
                       }`}
                     />
-
-                    {/* Out-of-order Slash */}
                     {!p.available && (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="absolute w-[250%] h-1 bg-red-600 rotate-45 opacity-80"></div>
@@ -186,38 +166,26 @@ function Admin() {
                     )}
                   </div>
 
-                  {/* Product Info */}
-                  <p
-                    className={`font-semibold mt-2 ${
-                      !p.available ? "text-gray-700" : "text-black"
-                    }`}
-                  >
+                  <p className={`font-semibold mt-2 ${!p.available ? "text-gray-700" : "text-black"}`}>
                     {p.name}
                   </p>
-                  <p
-                    className={`${
-                      !p.available ? "text-gray-700" : "text-black"
-                    }`}
-                  >
-                    ${p.price}
+                  <p className={`${!p.available ? "text-gray-700" : "text-black"}`}>
+                  ₦{p.price}
                   </p>
 
-                  {/* Actions */}
                   <div className="flex justify-center gap-2 mt-3">
                     <button
                       onClick={() => toggleAvailability(p._id)}
-                      className={`px-3 py-1 rounded-md text-white cursor-pointer ${
-                        p.available
-                          ? "bg-yellow-600 hover:bg-yellow-700"
-                          : "bg-green-600 hover:bg-green-700"
+                      className={`p-3 rounded-md text-white cursor-pointer text-xs ${
+                        p.available ? "bg-yellow-800 hover:bg-yellow-900" : "bg-green-600 hover:bg-green-700"
                       }`}
                     >
                       {p.available ? "Mark Out of Order" : "Mark Available"}
                     </button>
-
                     <button
                       onClick={() => deleteProduct(p._id)}
-                      className="px-3 py-1 rounded-md bg-red-600 hover:bg-red-700 text-white cursor-pointer"
+                      className="p-3 rounded-md bg-red-800 hover:bg-red-900
+                       text-white cursor-pointer text-xs"
                     >
                       Delete
                     </button>
@@ -227,19 +195,15 @@ function Admin() {
             </div>
           </div>
         )}
-
         {activeTab === "orders" && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">Orders</h2>
+            <h2 className="text-2xl font-bold mb-4 ">Orders</h2>
             <div className="flex flex-col gap-4">
               {orders.map((o) => (
-                <div
-                  key={o._id}
-                  className="bg-white p-4 rounded-md shadow border"
-                >
-                  <strong>Order #{o._id}</strong>
+                <div key={o._id} className="bg-white p-4 rounded-md shadow border">
+                  <strong>Order {o._id}</strong>
                   <p>User: {o.user?.email || "Unknown"}</p>
-                  <p>Total: ${o.total}</p>
+                  <p>Total: ₦{o.total}</p>
                   <p>Status: {o.status}</p>
                 </div>
               ))}
