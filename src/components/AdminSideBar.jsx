@@ -42,7 +42,8 @@ const Sidebar = ({ activeTab, setActiveTab, logout }) => {
                 {item.label}
               </button>
             ))}
-            <button className="px-3 py-2 text-left rounded-md transition cursor-pointer
+            <button onClick={logout}
+             className="px-3 py-2 text-left rounded-md transition cursor-pointer
             hover:bg-red-700 hover:text-white text-red-700 font-serif flex border border-red-800">
              <LogOut className="mr-2"/> Logout
             </button>
@@ -75,8 +76,7 @@ const Sidebar = ({ activeTab, setActiveTab, logout }) => {
         <button
           onClick={logout}
           className="mt-6 w-full px-3 py-2 rounded-md bg-red-600 hover:bg-red-700
-           text-gray-100 font-medium transition cursor-pointer"
-        >
+           text-gray-100 font-medium transition cursor-pointer">
           Logout
         </button>
       </aside>
