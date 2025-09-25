@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/authStore";
+import useCartStore from "../store/cartStore"; // ✅ Zustand cart store
 import api from "../utils/api";
+import ShopNav from "../components/ShopNav";
 
 function Shop() {
   const [products, setProducts] = useState([]);
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
+  const { addToCart } = useCartStore(); // ✅ Zustand addToCart
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -18,72 +21,82 @@ function Shop() {
     fetchProducts();
   }, []);
 
-  const addToCart = (product) => {
-    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-    const existing = cart.find((item) => item._id === product._id);
-    if (existing) {
-      existing.quantity += 1;
-    } else {
-      cart.push({ ...product, quantity: 1 });
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to cart");
-  };
-
   return (
-    <div className="min-h-screen p-8 bg-gray-100">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">Shop</h2>
-        {user ? (
-          <div className="flex items-center gap-4">
-            <p>Welcome, {user.email}</p>
-            <button
-              onClick={logout}
-              className="px-3 py-1 rounded-md bg-red-600 text-white hover:bg-red-700"
-            >
-              Logout
-            </button>
-          </div>
-        ) : (
-          <p className="text-gray-600">You are not logged in</p>
-        )}
+    <div className="min-h-screen bg-gray-50">
+      {/* Navigation */}
+      <ShopNav />
+
+      {/* Page Header */}
+      <div className="max-w-7xl mx-auto px-6 pt-28 pb-6 text-center">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
+          🛒 Explore Our Products
+        </h1>
+        <p className="mt-2 text-gray-600">
+          Find the best deals and add items to your cart easily.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
-        {products.map((p) => (
-          <div
-            key={p._id}
-            className="bg-white rounded-lg shadow p-4 flex flex-col items-center"
-          >
-            <img
-              src={p.image ? `${import.meta.env.VITE_BASE_URL}${p.image}` : "/uploads/default.png"}
-              alt={p.name}
-              className={`w-full h-48 object-cover rounded-md transition ${
-                !p.available ? "grayscale opacity-60" : ""
-              }`}
-            />
-            <h3 className="mt-2 font-semibold text-lg">{p.name}</h3>
-            <p className={`text-md ${!p.available ? "text-gray-400" : "text-black"}`}>
-            ₦{p.price}
-            </p>
-            {!p.available && (
-              <span className="absolute top-2 left-2 bg-red-600 text-white px-2 py-1 text-xs rounded">
-                Out of Order
-              </span>
-            )}
-            <button
-              onClick={() => addToCart(p)}
-              disabled={!p.available}
-              className={`mt-3 w-full py-2 rounded-md text-white ${
-                p.available ? "bg-green-600 hover:bg-green-700" : "bg-gray-400 cursor-not-allowed"
-              }`}
+      {/* Product Grid */}
+      <div className="max-w-7xl mx-auto px-6 pb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {products.map((p) => (
+            <div
+              key={p._id}
+              className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col hover:shadow-lg transition relative"
             >
-              Add to Cart
-            </button>
-          </div>
-        ))}
+              {/* Out of Stock Tag */}
+              {!p.available && (
+                <span className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 text-xs rounded-full shadow">
+                  Out of Stock
+                </span>
+              )}
+
+              {/* Product Image */}
+              <img
+                src={
+                  p.image
+                    ? `${import.meta.env.VITE_BASE_URL}${p.image}`
+                    : "/uploads/default.png"
+                }
+                alt={p.name}
+                className={`w-full h-48 object-cover transition ${
+                  !p.available ? "grayscale opacity-60" : ""
+                }`}
+              />
+
+              {/* Product Info */}
+              <div className="p-4 flex flex-col flex-1">
+                <h3 className="font-semibold text-lg text-gray-800 truncate">
+                  {p.name}
+                </h3>
+                <p
+                  className={`mt-1 text-md font-medium ${
+                    !p.available ? "text-gray-400" : "text-green-700"
+                  }`}
+                >
+                  ₦{p.price.toLocaleString()}
+                </p>
+
+                {/* Add to Cart Button */}
+                <button
+                  onClick={() => {
+                    addToCart(p);
+                    alert("✅ Added to cart");
+                  }}
+                  disabled={!p.available}
+                  className={`mt-auto w-full py-2 rounded-lg text-white font-medium 
+                    transition ${
+                    p.available
+                      ? "bg-green-600 hover:bg-green-700"
+                      : "bg-gray-400 cursor-not-allowed"
+                  }`}
+                >
+                  {p.available ? "Add to Cart" : "Unavailable"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -40,7 +40,8 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-900 px-4">
+    <div className="flex flex-col items-center justify-center min-h-screen
+     bg-neutral-900 px-4">
       <Header />
 
       <h2 className="text-4xl font-bold tracking-wide text-gray-200 my-5">

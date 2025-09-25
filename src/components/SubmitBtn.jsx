@@ -6,12 +6,8 @@ const SubmitBtn = ({ children, title, loading }) => {
       type="submit"
       disabled={loading}
       className={`
-        bg-pink-100 
-        text-black 
-        py-3 rounded-3xl
-        text-lg
-        transition-all 
-        duration-300 
+        bg-pink-100 text-black 
+        py-3 rounded-3xl text-lg transition-all duration-300 
         shadow-md cursor-pointer
         ${loading 
           ? "opacity-70 cursor-not-allowed" 
