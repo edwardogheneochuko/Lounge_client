@@ -1,14 +1,16 @@
+import { useState } from "react";
 import useCartStore from "../store/cartStore";
 import useAuthStore from "../store/authStore";
 import api from "../utils/api";
 import { ArrowLeft, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Cart() {
   const { user } = useAuthStore();
+  const { cart, addToCart, decreaseQty, removeFromCart, clearCart } = useCartStore();
 
-  const { cart, addToCart, decreaseQty, removeFromCart, clearCart } =
-    useCartStore();
+  const [address, setAddress] = useState("");
 
   const getTotal = () =>
     cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -19,6 +21,11 @@ function Cart() {
       return;
     }
 
+    if (!address.trim()) {
+      toast.warning("Please enter a shipping address");
+      return;
+    }
+
     try {
       const orderData = {
         items: cart.map((item) => ({
@@ -26,11 +33,13 @@ function Cart() {
           quantity: item.quantity,
         })),
         total: getTotal(),
+        address, // send address to backend
       };
 
       const res = await api.post("/orders", orderData);
       toast.success("✅ Order placed successfully!");
       clearCart();
+      setAddress("");
       console.log("Order response:", res.data);
     } catch (err) {
       console.error(err);
@@ -41,12 +50,14 @@ function Cart() {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-6">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 flex 
-        items-center gap-2">
-        <Link to="/shop" className="p-2 bg-gray-200 rounded-full 
-        hover:bg-gray-400 duration-200">
-        <ArrowLeft/>
-        </Link> 🛒 Your Cart
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <Link
+            to="/shop"
+            className="p-2 bg-gray-200 rounded-full hover:bg-gray-400 duration-200"
+          >
+            <ArrowLeft />
+          </Link>{" "}
+          🛒 Your Cart
         </h2>
 
         {cart.length === 0 ? (
@@ -58,7 +69,8 @@ function Cart() {
             {cart.map((item) => (
               <div
                 key={item._id}
-                className="flex items-center justify-between border-b pb-4">
+                className="flex items-center justify-between border-b pb-4"
+              >
                 <div className="flex items-center gap-4">
                   <img
                     src={
@@ -83,7 +95,8 @@ function Cart() {
                   <button
                     onClick={() => decreaseQty(item._id)}
                     className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer
-                     bg-gray-200 hover:bg-gray-300">
+                     bg-gray-200 hover:bg-gray-300"
+                  >
                     -
                   </button>
                   <span className="font-medium">{item.quantity}</span>
@@ -105,6 +118,21 @@ function Cart() {
               </div>
             ))}
 
+            {/* Address Input */}
+            <div className="mt-6">
+              <label className="block font-medium text-gray-700 mb-2">
+                Shipping Address
+              </label>
+              <textarea
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Enter your shipping address..."
+                className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+                rows={3}
+              />
+            </div>
+
+            {/* Total */}
             <div className="flex justify-between items-center pt-6">
               <span className="text-lg font-semibold">Total:</span>
               <span className="text-xl font-bold text-green-600">
@@ -115,7 +143,8 @@ function Cart() {
             <button
               onClick={checkout}
               className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl 
-              font-semibold text-lg mt-6 transition cursor-pointer">
+              font-semibold text-lg mt-6 transition cursor-pointer"
+            >
               Checkout
             </button>
           </div>
