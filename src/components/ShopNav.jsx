@@ -25,7 +25,6 @@ const ShopNav = () => {
       }`}
     >
       <div className="px-6 py-4 flex justify-between items-center max-w-7xl mx-auto">
-        {/* Logo */}
         <Link
           to="/"
           className="text-2xl font-bold text-green-600 hover:text-green-700 transition"
@@ -33,7 +32,6 @@ const ShopNav = () => {
           🛍️ MyShop
         </Link>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
           <Link
             to="/cart"
@@ -57,7 +55,8 @@ const ShopNav = () => {
               </div>
               <button
                 onClick={logout}
-                className="flex items-center gap-2 px-3 py-1 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+                className="flex items-center gap-2 px-3 py-1 rounded-md bg-red-600 cursor-pointer
+                 text-white hover:bg-red-700 transition"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
@@ -73,7 +72,6 @@ const ShopNav = () => {
           )}
         </div>
 
-        {/* Mobile Cart + Toggle in one row */}
         <div className="flex items-center gap-4 md:hidden">
           <Link
             to="/cart"
@@ -81,7 +79,8 @@ const ShopNav = () => {
           >
             <ShoppingCart className="w-6 h-6" />
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+              <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs px-2
+               py-0.5 rounded-full">
                 {cartCount}
               </span>
             )}
@@ -96,12 +95,12 @@ const ShopNav = () => {
         </div>
       </div>
 
-      {/* Mobile Dropdown */}
       {isOpen && (
-        <div className="md:hidden bg-white border-t shadow-md flex flex-col gap-4 px-6 py-4 animate-fadeIn">
+        <div className="md:hidden bg-white border-t shadow-md flex flex-col
+         gap-4 px-6 py-4 animate-fadeIn">
           {user ? (
             <>
-              <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-gray-100">
+              <div className="flex items-center gap-2 p-3 rounded-md bg-gray-100">
                 <User className="w-4 h-4 text-gray-600" />
                 <span className="text-gray-700 text-sm truncate">
                   {user.email}
@@ -112,8 +111,8 @@ const ShopNav = () => {
                   logout();
                   setIsOpen(false);
                 }}
-                className="flex items-center gap-2 px-3 py-1 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
-              >
+                className="flex items-center gap-2 px-3 py-1 rounded-md bg-red-600
+            text-white hover:bg-red-700 transition mt-1 w-fit mx-auto cursor-pointer">
                 <LogOut className="w-4 h-4" />
                 Logout
               </button>
@@ -122,9 +121,9 @@ const ShopNav = () => {
             <Link
               to="/login"
               onClick={() => setIsOpen(false)}
-              className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 transition"
-            >
-              Login
+              className="px-4 py-2 rounded-md bg-green-600 text-white
+               hover:bg-green-700 transition">
+                  Login
             </Link>
           )}
         </div>

@@ -50,9 +50,8 @@ const Login = () => {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-sm grid gap-4 bg-neutral-800 p-6 rounded-xl shadow-lg"
-      >
-        {/* Email */}
+        className="w-full max-w-sm grid gap-4 bg-neutral-800 p-6 rounded-xl
+         shadow-lg">
         <div className="flex flex-col">
           <label htmlFor="email" className="font-semibold text-gray-200 mb-1">
             Email
@@ -69,8 +68,7 @@ const Login = () => {
           )}
         </div>
 
-        {/* Password */}
-       {/* Password */}
+      
 <div className="flex flex-col relative">
   <label htmlFor="password" className="font-semibold text-gray-200 mb-1">
     Password
@@ -95,16 +93,13 @@ const Login = () => {
 </div>
 
 
-        {/* Server error */}
         {serverError && (
           <p className="text-red-600 text-center font-medium">{serverError}</p>
         )}
 
-        {/* Submit button */}
         <SubmitBtn title="Login" loading={loading} />
       </form>
 
-      {/* Links */}
       <div className="mt-4 text-gray-400 text-sm">
         Don&apos;t have an account ?{" "}
         <Link to="/register" className="text-pink-500 hover:underline">

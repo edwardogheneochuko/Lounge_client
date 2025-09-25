@@ -48,7 +48,8 @@ function Shop() {
                 flex flex-col hover:shadow-lg transition relative"
               >
                 {!p.available && (
-                  <span className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 text-xs rounded-full shadow">
+                  <span className="absolute top-3 left-3 bg-red-600 text-white
+                   px-3 py-1 text-xs rounded-full shadow">
                     Out of Stock
                   </span>
                 )}
@@ -82,14 +83,16 @@ function Shop() {
                       <div className="mt-auto flex items-center justify-between border rounded-lg overflow-hidden">
                         <button
                           onClick={() => removeFromCart(p._id)}
-                          className="flex-1 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700"
+                          className="flex-1 py-2 bg-gray-100 hover:bg-gray-200
+                           text-gray-700 cursor-pointer"
                         >
                           <Minus className="w-4 h-4 mx-auto" />
                         </button>
                         <span className="px-4 font-medium">{inCart.quantity}</span>
                         <button
                           onClick={() => addToCart(p)}
-                          className="flex-1 py-2 bg-green-600 hover:bg-green-700 text-white"
+                          className="flex-1 py-2 bg-green-600 hover:bg-green-700
+                           text-white cursor-pointer"
                         >
                           <Plus className="w-4 h-4 mx-auto" />
                         </button>
@@ -97,7 +100,8 @@ function Shop() {
                     ) : (
                       <button
                         onClick={() => addToCart(p)}
-                        className="mt-auto w-full py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium transition"
+                        className="mt-auto w-full py-2 rounded-lg cursor-pointer
+                         bg-green-600 hover:bg-green-700 text-white font-medium transition"
                       >
                         Add to Cart
                       </button>
