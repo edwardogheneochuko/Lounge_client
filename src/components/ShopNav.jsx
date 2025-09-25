@@ -14,15 +14,13 @@ const ShopNav = () => {
   return (
     <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
       <div className="px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
         <Link
           to="/"
-          className="text-2xl font-bold text-green-600 hover:text-green-700 transition"
-        >
+          className="text-2xl font-bold text-green-600 
+          hover:text-green-700 transition">
           🛍️ MyShop
         </Link>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
           <Link to="/shop" className="hover:text-green-600 transition">
             Shop
@@ -45,7 +43,8 @@ const ShopNav = () => {
               </div>
               <button
                 onClick={logout}
-                className="flex items-center gap-2 px-3 py-1 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+                className="flex items-center gap-2 px-3 py-1 cursor-pointer
+                rounded-md bg-red-600 text-white hover:bg-red-700 transition"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
@@ -61,16 +60,14 @@ const ShopNav = () => {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-gray-700"
+          className="md:hidden text-gray-700 cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
-      {/* Mobile Dropdown Menu */}
       {isOpen && (
         <div className="md:hidden bg-white shadow-md flex flex-col gap-4 px-6 py-4">
           <Link to="/shop" className="hover:text-green-600 transition" onClick={() => setIsOpen(false)}>
@@ -98,7 +95,8 @@ const ShopNav = () => {
                   logout();
                   setIsOpen(false);
                 }}
-                className="flex items-center gap-2 px-3 py-1 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+                className="flex items-center gap-2 px-3 py-1 rounded-md cursor-pointer
+                 bg-red-600 text-white hover:bg-red-700 transition"
               >
                 <LogOut className="w-4 h-4" />
                 Logout

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/authStore";
-import useCartStore from "../store/cartStore"; // ✅ Zustand cart store
+import useCartStore from "../store/cartStore"; 
 import api from "../utils/api";
 import ShopNav from "../components/ShopNav";
 
 function Shop() {
   const [products, setProducts] = useState([]);
   const { user } = useAuthStore();
-  const { addToCart } = useCartStore(); // ✅ Zustand addToCart
+  const { addToCart } = useCartStore(); 
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -23,10 +23,8 @@ function Shop() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
       <ShopNav />
 
-      {/* Page Header */}
       <div className="max-w-7xl mx-auto px-6 pt-28 pb-6 text-center">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
           🛒 Explore Our Products
@@ -36,22 +34,20 @@ function Shop() {
         </p>
       </div>
 
-      {/* Product Grid */}
       <div className="max-w-7xl mx-auto px-6 pb-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 
+        lg:grid-cols-4 gap-8">
           {products.map((p) => (
             <div
               key={p._id}
-              className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col hover:shadow-lg transition relative"
-            >
-              {/* Out of Stock Tag */}
+              className="bg-white rounded-2xl shadow-md overflow-hidden 
+              flex flex-col hover:shadow-lg transition relative">
               {!p.available && (
                 <span className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 text-xs rounded-full shadow">
                   Out of Stock
                 </span>
               )}
 
-              {/* Product Image */}
               <img
                 src={
                   p.image
@@ -64,7 +60,6 @@ function Shop() {
                 }`}
               />
 
-              {/* Product Info */}
               <div className="p-4 flex flex-col flex-1">
                 <h3 className="font-semibold text-lg text-gray-800 truncate">
                   {p.name}
@@ -77,7 +72,6 @@ function Shop() {
                   ₦{p.price.toLocaleString()}
                 </p>
 
-                {/* Add to Cart Button */}
                 <button
                   onClick={() => {
                     addToCart(p);
