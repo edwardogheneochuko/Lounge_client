@@ -17,18 +17,29 @@ const useCartStore = create(
           }
         }),
 
+      decreaseQty: (id) =>
+        set((state) => {
+          const existing = state.cart.find((item) => item._id === id);
+          if (existing) {
+            if (existing.quantity > 1) {
+              existing.quantity -= 1;
+            } else {
+              state.cart = state.cart.filter((item) => item._id !== id); 
+            }
+          }
+        }),
+
       removeFromCart: (id) =>
         set((state) => {
           state.cart = state.cart.filter((item) => item._id !== id);
         }),
 
-      clearCart: () => set((state) => {
-        state.cart = [];
-      }),
+      clearCart: () =>
+        set((state) => {
+          state.cart = [];
+        }),
     })),
-    {
-      name: "cart-storage",
-    }
+    { name: "cart-storage" }
   )
 );
 
