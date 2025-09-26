@@ -12,10 +12,11 @@ function Admin() {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const borderStyles = `border-2 border-neutral-500 p-3 rounded-md bg-neutral-800 text-gray-200 
-    placeholder:text-sm placeholder:md:text-base placeholder:tracking-wider placeholder:text-white
-    focus:outline-none focus:ring-2 focus:ring-pink-500`;
+  const borderStyles = `border-2 border-gray-300 p-3 rounded-lg 
+    focus:outline-none focus:ring-2 focus:ring-pink-500 text-gray-800 
+    placeholder:text-gray-400`;
 
+  // ✅ Fetch products + orders
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,6 +34,7 @@ function Admin() {
     fetchData();
   }, []);
 
+  // ✅ Image preview
   useEffect(() => {
     if (!form.image) {
       setPreview(null);
@@ -43,6 +45,7 @@ function Admin() {
     return () => URL.revokeObjectURL(objectUrl);
   }, [form.image]);
 
+  // ✅ Add product
   const addProduct = async () => {
     if (!form.name || !form.price) return alert("Name and price are required");
     setLoading(true);
@@ -66,6 +69,7 @@ function Admin() {
     }
   };
 
+  // ✅ Delete product
   const deleteProduct = async (id) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
 
@@ -77,6 +81,7 @@ function Admin() {
     }
   };
 
+  // ✅ Toggle availability
   const toggleAvailability = async (id) => {
     try {
       const res = await api.patch(`/products/${id}/toggle`);
@@ -90,23 +95,24 @@ function Admin() {
 
   return (
     <div className="flex min-h-screen font-sans">
-      {/* Fixed Sidebar */}
+      {/* Sidebar */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         logout={logout}
       />
 
-      {/* Main scrollable content */}
-      <main className="flex-1 p-8 bg-gray-500 md:ml-56 overflow-auto max-h-screen">
+      {/* Main Content */}
+      <main className="flex-1 p-8 bg-gray-100 md:ml-56 overflow-auto max-h-screen">
+        {/* ✅ PRODUCTS TAB */}
         {activeTab === "products" && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">Products</h2>
+            <h2 className="text-3xl font-bold mb-6 text-gray-800">Products</h2>
 
             {/* Add Product Form */}
-            <div className="bg-white p-5 rounded-lg shadow mb-6">
-              <h3 className="font-semibold mb-3">Add New Product</h3>
-              <div className="flex flex-col gap-3">
+            <div className="bg-white p-6 rounded-lg shadow mb-8">
+              <h3 className="font-semibold mb-4 text-lg">Add New Product</h3>
+              <div className="flex flex-col gap-4">
                 <input
                   placeholder="Product Name"
                   value={form.name}
@@ -123,21 +129,23 @@ function Admin() {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setForm({ ...form, image: e.target.files[0] })}
-                  className="p-2"
+                  onChange={(e) =>
+                    setForm({ ...form, image: e.target.files[0] })
+                  }
+                  className="p-2 border border-gray-300 rounded-md"
                 />
                 {preview && (
                   <img
                     src={preview}
                     alt="preview"
-                    className="w-32 rounded-md mt-2"
+                    className="w-32 h-32 object-cover rounded-md mt-2 shadow"
                   />
                 )}
                 <button
                   onClick={addProduct}
                   disabled={loading}
-                  className="bg-green-800 text-white py-2 rounded-md 
-                  hover:bg-green-900 transition cursor-pointer"
+                  className="bg-pink-600 text-white py-2 rounded-md 
+                  hover:bg-pink-700 transition cursor-pointer disabled:opacity-50"
                 >
                   {loading ? "Adding..." : "Add Product"}
                 </button>
@@ -149,42 +157,56 @@ function Admin() {
               {products.map((p) => (
                 <div
                   key={p._id}
-                  className="bg-white p-3 rounded-lg shadow text-center relative overflow-hidden"
+                  className="bg-white p-4 rounded-lg shadow text-center relative overflow-hidden group hover:shadow-lg transition"
                 >
                   <div className="relative">
                     <img
-                      src={p.image ? `${import.meta.env.VITE_BASE_URL}${p.image}` : "/uploads/default.png"}
+                      src={
+                        p.image
+                          ? p.image
+                          : "https://via.placeholder.com/150?text=No+Image"
+                      }
                       alt={p.name}
-                      className={`rounded-md w-full h-32 object-cover transition ${
+                      className={`rounded-md w-full h-40 object-cover transition ${
                         !p.available ? "grayscale opacity-60" : ""
                       }`}
                     />
                     {!p.available && (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="absolute w-[250%] h-1 bg-red-600 rotate-45 opacity-80"></div>
+                        <div className="absolute w-[200%] h-1 bg-red-600 rotate-45 opacity-80"></div>
                       </div>
                     )}
                   </div>
 
-                  <p className={`font-semibold mt-2 ${!p.available ? "text-gray-700" : "text-black"}`}>
+                  <p
+                    className={`font-semibold mt-3 text-lg ${
+                      !p.available ? "text-gray-500" : "text-gray-900"
+                    }`}
+                  >
                     {p.name}
                   </p>
-                  <p className={`${!p.available ? "text-gray-700" : "text-black"}`}>
-                  ₦{p.price}
+                  <p
+                    className={`${
+                      !p.available ? "text-gray-500" : "text-gray-700"
+                    }`}
+                  >
+                    ₦{p.price}
                   </p>
 
-                  <div className="flex justify-center gap-2 mt-3">
+                  <div className="flex justify-center gap-2 mt-4">
                     <button
                       onClick={() => toggleAvailability(p._id)}
-                      className={`p-3 rounded-md text-white cursor-pointer text-xs ${
-                        p.available ? "bg-yellow-800 hover:bg-yellow-900" : "bg-green-600 hover:bg-green-700"
+                      className={`px-3 py-2 rounded-md text-white cursor-pointer text-xs ${
+                        p.available
+                          ? "bg-yellow-600 hover:bg-yellow-700"
+                          : "bg-green-600 hover:bg-green-700"
                       }`}
                     >
-                      {p.available ? "Mark Out of Order" : "Mark Available"}
+                      {p.available ? "Mark Out of Stock" : "Mark Available"}
                     </button>
                     <button
                       onClick={() => deleteProduct(p._id)}
-                      className="p-3 rounded-md bg-red-800 hover:bg-red-900
+                      className="px-3 py-2 rounded-md bg-red-600 hover:bg-red-700
                        text-white cursor-pointer text-xs"
                     >
                       Delete
@@ -195,18 +217,95 @@ function Admin() {
             </div>
           </div>
         )}
+
+        {/* ✅ ORDERS TAB */}
         {activeTab === "orders" && (
           <div>
-            <h2 className="text-2xl font-bold mb-4 ">Orders</h2>
+            <h2 className="text-3xl font-bold mb-6 text-gray-800">Orders</h2>
             <div className="flex flex-col gap-4">
-              {orders.map((o) => (
-                <div key={o._id} className="bg-white p-4 rounded-md shadow border">
-                  <strong>Order {o._id}</strong>
-                  <p>User: {o.user?.email || "Unknown"}</p>
-                  <p>Total: ₦{o.total}</p>
-                  <p>Status: {o.status}</p>
-                </div>
-              ))}
+              {orders.map((o) => {
+                const [editing, setEditing] = useState(false);
+
+                return (
+                  <div
+                    key={o._id}
+                    className="bg-white p-5 rounded-lg shadow border hover:shadow-md transition"
+                  >
+                    <strong className="block text-gray-800 mb-2">
+                      Order #{o._id}
+                    </strong>
+                    <p className="text-gray-600">
+                      User: {o.user?.email || "Unknown"}
+                    </p>
+                    <p className="text-gray-600">Total: ₦{o.total}</p>
+
+                    {/* Status Section */}
+                    <div className="flex items-center gap-3 mt-3">
+                      <span className="text-gray-700 font-medium">Status:</span>
+
+                      {!editing ? (
+                        <>
+                          {/* Badge */}
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-semibold
+                              ${
+                                o.status === "pending"
+                                  ? "bg-yellow-100 text-yellow-700"
+                                  : o.status === "processing"
+                                  ? "bg-blue-100 text-blue-700"
+                                  : o.status === "shipped"
+                                  ? "bg-purple-100 text-purple-700"
+                                  : o.status === "delivered"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-red-100 text-red-700"
+                              }`}
+                          >
+                            {o.status}
+                          </span>
+
+                          {/* Edit button */}
+                          <button
+                            onClick={() => setEditing(true)}
+                            className="text-sm text-pink-600 hover:text-pink-800 font-medium"
+                          >
+                            ✏️ Edit
+                          </button>
+                        </>
+                      ) : (
+                        <select
+                          value={o.status}
+                          onChange={async (e) => {
+                            const newStatus = e.target.value;
+                            try {
+                              const res = await api.patch(
+                                `/orders/${o._id}/status`,
+                                { status: newStatus }
+                              );
+                              setOrders((prev) =>
+                                prev.map((ord) =>
+                                  ord._id === o._id ? res.data : ord
+                                )
+                              );
+                            } catch (err) {
+                              alert("Failed to update status");
+                            } finally {
+                              setEditing(false);
+                            }
+                          }}
+                          className="border border-gray-300 rounded-md p-2 text-sm cursor-pointer
+                            focus:ring-2 focus:ring-pink-500 focus:outline-none"
+                        >
+                          <option value="pending">Pending</option>
+                          <option value="processing">Processing</option>
+                          <option value="shipped">Shipped</option>
+                          <option value="delivered">Delivered</option>
+                          <option value="cancelled">Cancelled</option>
+                        </select>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

@@ -26,7 +26,7 @@ const useAuthStore = create(
       // Register
       register: async (username, email, password) => {
         try {
-          toast.info("Registering..."); // Optional loading toast
+          // toast.info("Registering..."); // Optional loading toast
           const res = await api.post("/auth/register", {
             username,
             email,
@@ -36,7 +36,7 @@ const useAuthStore = create(
             state.user = res.data.user;
             state.token = res.data.token;
           });
-          toast.success("✅ Registration successful");
+          toast.success(" Registration successful");
           return res.data;
         } catch (err) {
           const message = err.response?.data?.message || "Registration failed";
@@ -48,13 +48,13 @@ const useAuthStore = create(
       // Login
       login: async (email, password) => {
         try {
-          toast.info("Logging in..."); // Optional loading toast
+          // toast.info("Logging in..."); Optional loading toast
           const res = await api.post("/auth/login", { email, password });
           set((state) => {
             state.user = res.data.user;
             state.token = res.data.token;
           });
-          toast.success("✅ Login successful");
+          toast.success(" Login successful");
           return res.data;
         } catch (err) {
           const message = err.response?.data?.message || "Login failed";
@@ -70,7 +70,7 @@ const useAuthStore = create(
           state.token = null;
         });
         localStorage.removeItem("auth-storage");
-        toast.error("🚪 Logged out successfully");
+        toast.error(" Logged out successfully");
       },
     })),
     {

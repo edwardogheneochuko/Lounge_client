@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import useAuthStore from "../store/authStore";
 import useCartStore from "../store/cartStore"; 
 import api from "../utils/api";
 import ShopNav from "../components/ShopNav";
@@ -7,7 +6,6 @@ import { Plus, Minus } from "lucide-react";
 
 function Shop() {
   const [products, setProducts] = useState([]);
-  const { user } = useAuthStore();
   const { cart, addToCart, removeFromCart } = useCartStore(); 
 
   useEffect(() => {
@@ -17,6 +15,7 @@ function Shop() {
         setProducts(res.data);
       } catch (err) {
         console.error("Failed to fetch products", err);
+        toast.error("Failed to load products");
       }
     };
     fetchProducts();
@@ -55,11 +54,7 @@ function Shop() {
                 )}
 
                 <img
-                  src={
-                    p.image
-                      ? `${import.meta.env.VITE_BASE_URL}${p.image}`
-                      : "/uploads/default.png"
-                  }
+                  src={p.image ? p.image : "/uploads/default.png"}
                   alt={p.name}
                   className={`w-full h-48 object-cover transition ${
                     !p.available ? "grayscale opacity-60" : ""
@@ -82,7 +77,10 @@ function Shop() {
                     inCart ? (
                       <div className="mt-auto flex items-center justify-between border rounded-lg overflow-hidden">
                         <button
-                          onClick={() => removeFromCart(p._id)}
+                          onClick={() => {
+                            removeFromCart(p._id);
+                            toast("Removed one from cart", { icon: "➖" });
+                          }}
                           className="flex-1 py-2 bg-gray-100 hover:bg-gray-200
                            text-gray-700 cursor-pointer"
                         >
@@ -90,7 +88,10 @@ function Shop() {
                         </button>
                         <span className="px-4 font-medium">{inCart.quantity}</span>
                         <button
-                          onClick={() => addToCart(p)}
+                          onClick={() => {
+                            addToCart(p);
+                            toast.success(`${p.name} added to cart`);
+                          }}
                           className="flex-1 py-2 bg-green-600 hover:bg-green-700
                            text-white cursor-pointer"
                         >
@@ -99,7 +100,10 @@ function Shop() {
                       </div>
                     ) : (
                       <button
-                        onClick={() => addToCart(p)}
+                        onClick={() => {
+                          addToCart(p);
+                          toast.success(`${p.name} added to cart`);
+                        }}
                         className="mt-auto w-full py-2 rounded-lg cursor-pointer
                          bg-green-600 hover:bg-green-700 text-white font-medium transition"
                       >

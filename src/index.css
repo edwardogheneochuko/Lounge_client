@@ -1,2 +1,73 @@
 
 @import "tailwindcss";
+
+/* General toast styling */
+.Toastify__toast {
+    border-radius: 16px;                /* More rounded */
+    padding: 14px 18px;                 /* Comfortable spacing */
+    font-weight: 500;
+    font-size: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);  /* Softer shadow */
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s ease, opacity 0.3s ease;
+  }
+  
+  /* Slide up animation */
+  .Toastify__toast--enter {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  .Toastify__toast--enter-active {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .Toastify__toast--exit {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .Toastify__toast--exit-active {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  
+  /* Success toast */
+  .Toastify__toast--success {
+    background: linear-gradient(135deg, #22c55e, #16a34a); /* gradient green */
+  }
+  
+  /* Error toast */
+  .Toastify__toast--error {
+    background: linear-gradient(135deg, #ef4444, #b91c1c); /* gradient red */
+  }
+  
+  /* Info toast */
+  .Toastify__toast--info {
+    background: linear-gradient(135deg, #3b82f6, #1e40af); /* gradient blue */
+  }
+  
+  /* Close button */
+  .Toastify__close-button {
+    color: #fff;
+    opacity: 0.8;
+    font-size: 16px;
+  }
+  .Toastify__close-button:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  
+  /* Optional: add subtle icon scale animation on toast appearance */
+  .Toastify__toast-body svg {
+    transition: transform 0.2s ease;
+  }
+  .Toastify__toast--enter svg {
+    transform: scale(0.8);
+  }
+  .Toastify__toast--enter-active svg {
+    transform: scale(1);
+  }
+  

@@ -8,16 +8,15 @@ import 'react-toastify/dist/ReactToastify.css'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />
-    <ToastContainer 
-      position="top-center" 
-      autoClose={3000} 
-      hideProgressBar={false} 
-      newestOnTop={false} 
-      closeOnClick 
-      rtl={false} 
-      pauseOnFocusLoss 
-      draggable 
-      pauseOnHover 
-    />
+    <ToastContainer
+  position="top-center"
+  autoClose={800}              
+  hideProgressBar              
+  newestOnTop
+  closeOnClick
+  pauseOnHover={false}         
+  draggable
+/>
+
   </StrictMode>,
 )

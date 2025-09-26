@@ -11,6 +11,7 @@ function Cart() {
   const { cart, addToCart, decreaseQty, removeFromCart, clearCart } = useCartStore();
 
   const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const getTotal = () =>
     cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -26,6 +27,7 @@ function Cart() {
       return;
     }
 
+    setLoading(true);
     try {
       const orderData = {
         items: cart.map((item) => ({
@@ -33,7 +35,7 @@ function Cart() {
           quantity: item.quantity,
         })),
         total: getTotal(),
-        address, // send address to backend
+        address,
       };
 
       const res = await api.post("/orders", orderData);
@@ -43,7 +45,9 @@ function Cart() {
       console.log("Order response:", res.data);
     } catch (err) {
       console.error(err);
-      toast.warning(err.response?.data?.message || "Failed to place order");
+      toast.error(err.response?.data?.message || "Failed to place order");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,7 +60,7 @@ function Cart() {
             className="p-2 bg-gray-200 rounded-full hover:bg-gray-400 duration-200"
           >
             <ArrowLeft />
-          </Link>{" "}
+          </Link>
           🛒 Your Cart
         </h2>
 
@@ -73,11 +77,7 @@ function Cart() {
               >
                 <div className="flex items-center gap-4">
                   <img
-                    src={
-                      item.image
-                        ? `${import.meta.env.VITE_BASE_URL}${item.image}`
-                        : "/uploads/default.png"
-                    }
+                    src={item.image ? item.image : "/uploads/default.png"}
                     alt={item.name}
                     className="w-20 h-20 object-cover rounded-lg border"
                   />
@@ -132,7 +132,7 @@ function Cart() {
               />
             </div>
 
-            {/* Total */}
+            {/* Total + Clear */}
             <div className="flex justify-between items-center pt-6">
               <span className="text-lg font-semibold">Total:</span>
               <span className="text-xl font-bold text-green-600">
@@ -140,13 +140,22 @@ function Cart() {
               </span>
             </div>
 
-            <button
-              onClick={checkout}
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl 
-              font-semibold text-lg mt-6 transition cursor-pointer"
-            >
-              Checkout
-            </button>
+            <div className="flex gap-4 mt-6">
+              <button
+                onClick={clearCart}
+                className="w-1/3 bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 rounded-xl font-medium cursor-pointer"
+              >
+                Clear Cart
+              </button>
+              <button
+                onClick={checkout}
+                disabled={loading}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl 
+                font-semibold text-lg transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Placing Order..." : "Checkout"}
+              </button>
+            </div>
           </div>
         )}
       </div>
