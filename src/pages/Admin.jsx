@@ -16,7 +16,6 @@ function Admin() {
     focus:outline-none focus:ring-2 focus:ring-pink-500 text-gray-800 
     placeholder:text-gray-400`;
 
-  // ✅ Fetch products + orders
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,7 +33,6 @@ function Admin() {
     fetchData();
   }, []);
 
-  // ✅ Image preview
   useEffect(() => {
     if (!form.image) {
       setPreview(null);
@@ -45,31 +43,36 @@ function Admin() {
     return () => URL.revokeObjectURL(objectUrl);
   }, [form.image]);
 
-  // ✅ Add product
   const addProduct = async () => {
     if (!form.name || !form.price) return alert("Name and price are required");
     setLoading(true);
+  
     try {
       const formData = new FormData();
       formData.append("name", form.name);
-      formData.append("price", Number(form.price));
-      if (form.image) formData.append("image", form.image);
-
+      formData.append("price", form.price); // No need to convert here, backend handles it
+  
+      // Only append image if selected
+      if (form.image) {
+        formData.append("image", form.image);
+      }
+  
       const res = await api.post("/products", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
+  
       setProducts((prev) => [...prev, res.data]);
       setForm({ name: "", price: "", image: null });
       setPreview(null);
     } catch (err) {
+      console.error("Add product error:", err);
       alert(err.response?.data?.message || "Failed to add product");
     } finally {
       setLoading(false);
     }
   };
+  
 
-  // ✅ Delete product
   const deleteProduct = async (id) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
 
@@ -81,7 +84,6 @@ function Admin() {
     }
   };
 
-  // ✅ Toggle availability
   const toggleAvailability = async (id) => {
     try {
       const res = await api.patch(`/products/${id}/toggle`);
@@ -206,8 +208,10 @@ function Admin() {
                     </button>
                     <button
                       onClick={() => deleteProduct(p._id)}
-                      className="px-3 py-2 rounded-md bg-red-600 hover:bg-red-700
-                       text-white cursor-pointer text-xs"
+                      className="w-full sm:w-auto px-4 py-2 rounded-lg bg-red-600 
+                      hover:bg-red-700 text-white font-medium cursor-pointer
+                      shadow-md active:scale-95 transition relative "
+
                     >
                       Delete
                     </button>
