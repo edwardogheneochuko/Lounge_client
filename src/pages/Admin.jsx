@@ -48,17 +48,23 @@ function Admin() {
     setLoading(true);
   
     try {
-      const formData = new FormData();
-      formData.append("name", form.name);
-      formData.append("price", form.price); // No need to convert here, backend handles it
+      let imageUrl = "";
   
-      // Only append image if selected
       if (form.image) {
-        formData.append("image", form.image);
+        const imgData = new FormData();
+        imgData.append("image", form.image);
+  
+        const uploadRes = await api.post("/upload", imgData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+  
+        imageUrl = uploadRes.data.url; 
       }
   
-      const res = await api.post("/products", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const res = await api.post("/products", {
+        name: form.name,
+        price: form.price,
+        image: imageUrl,
       });
   
       setProducts((prev) => [...prev, res.data]);
@@ -71,6 +77,7 @@ function Admin() {
       setLoading(false);
     }
   };
+  
   
 
   const deleteProduct = async (id) => {
