@@ -9,7 +9,7 @@ const api = axios.create({
 // Add token automatically
 api.interceptors.request.use(
   (config) => {
-    const { token } = useAuthStore.getState(); // get token from Zustand store
+    const { token } = useAuthStore.getState(); 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

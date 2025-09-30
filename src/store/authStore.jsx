@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 
 const API_BASE = import.meta.env.VITE_API_URL || "https://lounge-server-149q.onrender.com/api";
 
-// Axios instance with token interceptor
 const api = axios.create({ baseURL: API_BASE });
 api.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token;
@@ -23,10 +22,8 @@ const useAuthStore = create(
       user: null,
       token: null,
 
-      // Register
       register: async (username, email, password) => {
         try {
-          // toast.info("Registering..."); // Optional loading toast
           const res = await api.post("/auth/register", {
             username,
             email,
@@ -45,10 +42,8 @@ const useAuthStore = create(
         }
       },
 
-      // Login
       login: async (email, password) => {
         try {
-          // toast.info("Logging in..."); Optional loading toast
           const res = await api.post("/auth/login", { email, password });
           set((state) => {
             state.user = res.data.user;
@@ -63,7 +58,6 @@ const useAuthStore = create(
         }
       },
 
-      // Logout
       logout: () => {
         set((state) => {
           state.user = null;

@@ -12,10 +12,11 @@ function Admin() {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
+
   const borderStyles = `border-2 border-gray-300 p-3 rounded-lg 
     focus:outline-none focus:ring-2 focus:ring-pink-500 text-gray-800 
     placeholder:text-gray-400`;
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -31,7 +32,7 @@ function Admin() {
       }
     };
     fetchData();
-  }, []);
+  }, []); 
 
   useEffect(() => {
     if (!form.image) {
@@ -49,7 +50,7 @@ function Admin() {
   
     try {
       let imageUrl = "";
-  
+
       if (form.image) {
         const imgData = new FormData();
         imgData.append("image", form.image);
@@ -104,21 +105,17 @@ function Admin() {
 
   return (
     <div className="flex min-h-screen font-sans">
-      {/* Sidebar */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         logout={logout}
       />
 
-      {/* Main Content */}
       <main className="flex-1 p-8 bg-gray-100 md:ml-56 overflow-auto max-h-screen">
-        {/* ✅ PRODUCTS TAB */}
         {activeTab === "products" && (
           <div>
             <h2 className="text-3xl font-bold mb-6 text-gray-800">Products</h2>
 
-            {/* Add Product Form */}
             <div className="bg-white p-6 rounded-lg shadow mb-8">
               <h3 className="font-semibold mb-4 text-lg">Add New Product</h3>
               <div className="flex flex-col gap-4">
@@ -274,7 +271,6 @@ function Admin() {
                             {o.status}
                           </span>
 
-                          {/* Edit button */}
                           <button
                             onClick={() => setEditing(true)}
                             className="text-sm text-pink-600 hover:text-pink-800 font-medium"

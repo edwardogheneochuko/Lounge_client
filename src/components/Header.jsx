@@ -1,6 +1,6 @@
 import React from 'react';
 import { UtensilsCrossed } from 'lucide-react';
-
+ 
 const Header = () => {
   return (
     <div className="flex justify-center mt-5">
@@ -18,7 +18,7 @@ const Header = () => {
         "
         aria-label="Food Icon"
       >
-        <UtensilsCrossed size={50} />
+        <UtensilsCrossed size={50} /> 
       </div>
     </div>
   );
