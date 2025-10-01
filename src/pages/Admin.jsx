@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import useAuthStore from "../store/authStore";
 import api from "../utils/api";
 import Sidebar from "../components/AdminSideBar";
+import OrderCard from "../components/OrderCard";
 
 function Admin() {
   const { user, logout } = useAuthStore();
@@ -12,11 +13,10 @@ function Admin() {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
-
   const borderStyles = `border-2 border-gray-300 p-3 rounded-lg 
     focus:outline-none focus:ring-2 focus:ring-pink-500 text-gray-800 
     placeholder:text-gray-400`;
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -32,7 +32,7 @@ function Admin() {
       }
     };
     fetchData();
-  }, []); 
+  }, []);
 
   useEffect(() => {
     if (!form.image) {
@@ -47,27 +47,27 @@ function Admin() {
   const addProduct = async () => {
     if (!form.name || !form.price) return alert("Name and price are required");
     setLoading(true);
-  
+
     try {
       let imageUrl = "";
 
       if (form.image) {
         const imgData = new FormData();
         imgData.append("image", form.image);
-  
+
         const uploadRes = await api.post("/upload", imgData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-  
-        imageUrl = uploadRes.data.url; 
+
+        imageUrl = uploadRes.data.url;
       }
-  
+
       const res = await api.post("/products", {
         name: form.name,
         price: form.price,
         image: imageUrl,
       });
-  
+
       setProducts((prev) => [...prev, res.data]);
       setForm({ name: "", price: "", image: null });
       setPreview(null);
@@ -78,8 +78,6 @@ function Admin() {
       setLoading(false);
     }
   };
-  
-  
 
   const deleteProduct = async (id) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
@@ -132,21 +130,55 @@ function Admin() {
                   onChange={(e) => setForm({ ...form, price: e.target.value })}
                   className={borderStyles}
                 />
+
+                {/* Drag & Drop Upload */}
+                <div
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer hover:border-pink-500 transition"
+                  onClick={() => document.getElementById("fileInput").click()}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                      setForm({ ...form, image: e.dataTransfer.files[0] });
+                    }
+                  }}
+                >
+                  {!preview ? (
+                    <div className="text-center">
+                      <p className="text-gray-500">Drag & drop an image here</p>
+                      <p className="text-gray-400 text-sm">or click to browse</p>
+                    </div>
+                  ) : (
+                    <div className="relative">
+                      <img
+                        src={preview}
+                        alt="preview"
+                        className="w-32 h-32 object-cover rounded-md shadow"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setForm({ ...form, image: null });
+                          setPreview(null);
+                        }}
+                        className="absolute top-0 right-0 bg-red-600 text-white p-1 rounded-full shadow hover:bg-red-700"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <input
+                  id="fileInput"
                   type="file"
                   accept="image/*"
+                  className="hidden"
                   onChange={(e) =>
                     setForm({ ...form, image: e.target.files[0] })
                   }
-                  className="p-2 border border-gray-300 rounded-md"
                 />
-                {preview && (
-                  <img
-                    src={preview}
-                    alt="preview"
-                    className="w-32 h-32 object-cover rounded-md mt-2 shadow"
-                  />
-                )}
+
                 <button
                   onClick={addProduct}
                   disabled={loading}
@@ -215,7 +247,6 @@ function Admin() {
                       className="w-full sm:w-auto px-4 py-2 rounded-lg bg-red-600 
                       hover:bg-red-700 text-white font-medium cursor-pointer
                       shadow-md active:scale-95 transition relative "
-
                     >
                       Delete
                     </button>
@@ -226,93 +257,14 @@ function Admin() {
           </div>
         )}
 
-        {/* ✅ ORDERS TAB */}
+        {/* Orders Tab */}
         {activeTab === "orders" && (
           <div>
             <h2 className="text-3xl font-bold mb-6 text-gray-800">Orders</h2>
             <div className="flex flex-col gap-4">
-              {orders.map((o) => {
-                const [editing, setEditing] = useState(false);
-
-                return (
-                  <div
-                    key={o._id}
-                    className="bg-white p-5 rounded-lg shadow border hover:shadow-md transition"
-                  >
-                    <strong className="block text-gray-800 mb-2">
-                      Order #{o._id}
-                    </strong>
-                    <p className="text-gray-600">
-                      User: {o.user?.email || "Unknown"}
-                    </p>
-                    <p className="text-gray-600">Total: ₦{o.total}</p>
-
-                    {/* Status Section */}
-                    <div className="flex items-center gap-3 mt-3">
-                      <span className="text-gray-700 font-medium">Status:</span>
-
-                      {!editing ? (
-                        <>
-                          {/* Badge */}
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs font-semibold
-                              ${
-                                o.status === "pending"
-                                  ? "bg-yellow-100 text-yellow-700"
-                                  : o.status === "processing"
-                                  ? "bg-blue-100 text-blue-700"
-                                  : o.status === "shipped"
-                                  ? "bg-purple-100 text-purple-700"
-                                  : o.status === "delivered"
-                                  ? "bg-green-100 text-green-700"
-                                  : "bg-red-100 text-red-700"
-                              }`}
-                          >
-                            {o.status}
-                          </span>
-
-                          <button
-                            onClick={() => setEditing(true)}
-                            className="text-sm text-pink-600 hover:text-pink-800 font-medium"
-                          >
-                            ✏️ Edit
-                          </button>
-                        </>
-                      ) : (
-                        <select
-                          value={o.status}
-                          onChange={async (e) => {
-                            const newStatus = e.target.value;
-                            try {
-                              const res = await api.patch(
-                                `/orders/${o._id}/status`,
-                                { status: newStatus }
-                              );
-                              setOrders((prev) =>
-                                prev.map((ord) =>
-                                  ord._id === o._id ? res.data : ord
-                                )
-                              );
-                            } catch (err) {
-                              alert("Failed to update status");
-                            } finally {
-                              setEditing(false);
-                            }
-                          }}
-                          className="border border-gray-300 rounded-md p-2 text-sm cursor-pointer
-                            focus:ring-2 focus:ring-pink-500 focus:outline-none"
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="processing">Processing</option>
-                          <option value="shipped">Shipped</option>
-                          <option value="delivered">Delivered</option>
-                          <option value="cancelled">Cancelled</option>
-                        </select>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+              {orders.map((o) => (
+                <OrderCard key={o._id} o={o} setOrders={setOrders} />
+              ))}
             </div>
           </div>
         )}
