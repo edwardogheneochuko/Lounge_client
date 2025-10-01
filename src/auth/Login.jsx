@@ -113,6 +113,9 @@ const Login = () => {
       >
         Forgot Password?
       </Link>
+      <Link to="/" className="mt-5 md::mt-10 text-gray-200 text-sm">
+         Homepage
+      </Link>
     </div>
   );
 };
