@@ -9,38 +9,55 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Admin from './pages/Admin';
 import Cart from './pages/Cart';
 import Shop from './pages/Shop';
-
+import MyOrders from './components/MyOrder'
 
 const App = () => {
   return (
-    <>
-      <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/register' element={<Register />}/>
-            <Route path='/forgot-password' element={<ForgotPassword />} />
-            <Route path='/reset-password/:token' element={<ResetPassword />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/reset-password/:token' element={<ResetPassword />} />
 
-            <Route path='/shop' 
-            element={<ProtectedRoute>
+        <Route 
+          path='/shop' 
+          element={
+            <ProtectedRoute>
               <Shop />
-            </ProtectedRoute>}
-            />
+            </ProtectedRoute>
+          } 
+        />
 
-            <Route path='/cart'
-             element={
-              <ProtectedRoute>
-                <Cart />
-              </ProtectedRoute>
-             }/>
+        <Route 
+          path='/cart'
+          element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
 
-            <Route path='/admin' element={<ProtectedRoute role='admin'>
+        <Route 
+          path='/my-orders'        
+          element={
+            <ProtectedRoute>
+              <MyOrders />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path='/admin' 
+          element={
+            <ProtectedRoute role='admin'>
               <Admin />
-            </ProtectedRoute>} />
-          </Routes>
-      </BrowserRouter>
-    </>
+            </ProtectedRoute>
+          } 
+        />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

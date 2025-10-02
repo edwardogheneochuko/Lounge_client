@@ -10,7 +10,12 @@ function Cart() {
   const { user } = useAuthStore();
   const { cart, addToCart, decreaseQty, removeFromCart, clearCart } = useCartStore();
 
-  const [address, setAddress] = useState("");
+  // Address fields
+  const [phone, setPhone] = useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [zip, setZip] = useState("");
   const [loading, setLoading] = useState(false);
 
   const getTotal = () =>
@@ -22,8 +27,8 @@ function Cart() {
       return;
     }
 
-    if (!address.trim()) {
-      toast.warning("Please enter a shipping address");
+    if (!phone.trim() || !street.trim() || !city.trim() || !state.trim()) {
+      toast.warning("Please complete your shipping details");
       return;
     }
 
@@ -33,15 +38,28 @@ function Cart() {
         items: cart.map((item) => ({
           product: item._id,
           quantity: item.quantity,
+          name: item.name,
+          price: item.price,
         })),
         total: getTotal(),
-        address,
+        address: {
+          fullName: user?.name || "Customer", // ✅ taken from logged-in user
+          phone,
+          street,
+          city,
+          state,
+          zip,
+        },
       };
 
       const res = await api.post("/orders", orderData);
       toast.success("✅ Order placed successfully!");
       clearCart();
-      setAddress("");
+      setPhone("");
+      setStreet("");
+      setCity("");
+      setState("");
+      setZip("");
       console.log("Order response:", res.data);
     } catch (err) {
       console.error(err);
@@ -118,21 +136,60 @@ function Cart() {
               </div>
             ))}
 
-            {/* Address Input */}
+            {/* Phone */}
             <div className="mt-6">
               <label className="block font-medium text-gray-700 mb-2">
-                Shipping Address
+                Phone Number
               </label>
-              <textarea
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Enter your shipping address..."
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Enter your phone number..."
                 className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
-                rows={3}
               />
             </div>
 
-            {/* Total + Clear */}
+            {/* Street */}
+            <div className="mt-6">
+              <label className="block font-medium text-gray-700 mb-2">
+                Street Address
+              </label>
+              <input
+                type="text"
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
+                placeholder="Enter your street..."
+                className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+              />
+            </div>
+
+            {/* City, State, Zip */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              <input
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="City"
+                className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+              />
+              <input
+                type="text"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                placeholder="State"
+                className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+              />
+              <input
+                type="text"
+                value={zip}
+                onChange={(e) => setZip(e.target.value)}
+                placeholder="Zip"
+                className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+              />
+            </div>
+
+            {/* Total + Buttons */}
             <div className="flex justify-between items-center pt-6">
               <span className="text-lg font-semibold">Total:</span>
               <span className="text-xl font-bold text-green-600">
@@ -149,7 +206,7 @@ function Cart() {
               </button>
               <button
                 onClick={checkout}
-                disabled={loading}
+                disabled={loading || cart.length === 0}
                 className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl 
                 font-semibold text-lg transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
