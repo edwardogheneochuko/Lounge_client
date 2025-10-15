@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { ShoppingCart, LogOut, User, Menu, X, Package } from "lucide-react";
+import { ShoppingCart, LogOut, User, Menu, X, Package, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import useAuthStore from "../store/authStore";
 import useCartStore from "../store/cartStore";
 
 const ShopNav = () => {
+
   const { user, logout } = useAuthStore();
   const { cart } = useCartStore();
   const [isOpen, setIsOpen] = useState(false);
@@ -25,14 +26,12 @@ const ShopNav = () => {
       }`}
     >
       <div className="px-6 py-4 flex justify-between items-center max-w-7xl mx-auto">
-        <Link
-          to="/shop"
+        <Link to='/shop'
           className="text-2xl font-bold text-green-600 hover:text-green-700 transition"
         >
           🛍️ MyShop
         </Link>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
           <Link
             to="/cart"
@@ -40,10 +39,16 @@ const ShopNav = () => {
           >
             <ShoppingCart className="w-6 h-6" />
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+              <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs
+               px-2 py-0.5 rounded-full">
                 {cartCount}
               </span>
             )}
+          </Link>
+          
+          <Link to='/settings' className="relative flex items-center hover:text-green-600 
+          transition"> 
+          <Settings />
           </Link>
 
           {user && (
@@ -96,7 +101,10 @@ const ShopNav = () => {
               </span>
             )}
           </Link>
-
+          <Link to='/settings' className="relative flex items-center hover:text-green-600 
+          transition"> 
+          <Settings />
+          </Link>
           <button
             className="text-gray-700 cursor-pointer"
             onClick={() => setIsOpen(!isOpen)}

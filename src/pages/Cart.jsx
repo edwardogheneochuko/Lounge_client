@@ -70,15 +70,9 @@ function Cart() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-6">
+    <div className="min-h-screen bg-gray-50 py-10 px-6 mt-10">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-          <Link
-            to="/shop"
-            className="p-2 bg-gray-200 rounded-full hover:bg-gray-400 duration-200"
-          >
-            <ArrowLeft />
-          </Link>
           🛒 Your Cart
         </h2>
 

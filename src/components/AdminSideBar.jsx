@@ -1,10 +1,11 @@
-import { LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, X, Settings } from "lucide-react";
 import React, { useState } from "react";
 
 const Sidebar = ({ activeTab, setActiveTab, logout }) => {
   const menuItems = [
     { id: "products", label: "Products" },
     { id: "orders", label: "Orders" },
+    { id: "settings", label: "Settings", icon: <Settings className="w-4 h-4 inline mr-2" /> },
   ];
   const [open, setOpen] = useState(false);
   const toggleMenu = () => setOpen(!open);
@@ -33,19 +34,22 @@ const Sidebar = ({ activeTab, setActiveTab, logout }) => {
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`px-3 py-2 text-left rounded-md transition cursor-pointer ${
+                className={`px-3 py-2 text-left rounded-md transition cursor-pointer  ${
                   activeTab === item.id
                     ? "bg-gray-700 text-white font-serif"
-                    : "hover:bg-gray-800 text-gray-300"
+                    : "hover:bg-gray-800 hover:text-white text-gray-800"
                 }`}
               >
+                {item.icon}
                 {item.label}
               </button>
             ))}
-            <button onClick={logout}
-             className="px-3 py-2 text-left rounded-md transition cursor-pointer
-            hover:bg-red-700 hover:text-white text-red-700 font-serif flex border border-red-800">
-             <LogOut className="mr-2"/> Logout
+            <button
+              onClick={logout}
+              className="px-3 py-2 text-left rounded-md transition cursor-pointer
+              hover:bg-red-700 hover:text-white text-red-700 font-serif flex border border-red-800"
+            >
+              <LogOut className="mr-2" /> Logout
             </button>
           </div>
         </div>
@@ -62,12 +66,13 @@ const Sidebar = ({ activeTab, setActiveTab, logout }) => {
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`px-3 py-2 text-left rounded-md transition cursor-pointer ${
+              className={`px-3 py-2 text-left rounded-md transition cursor-pointer flex items-center ${
                 activeTab === item.id
                   ? "bg-gray-700 text-white font-serif"
                   : "hover:bg-gray-800 text-gray-300"
               }`}
             >
+              {item.icon}
               {item.label}
             </button>
           ))}
@@ -76,8 +81,9 @@ const Sidebar = ({ activeTab, setActiveTab, logout }) => {
         <button
           onClick={logout}
           className="mt-6 w-full px-3 py-2 rounded-md bg-red-600 hover:bg-red-700
-           text-gray-100 font-medium transition cursor-pointer">
-          Logout
+           text-gray-100 font-medium transition cursor-pointer flex items-center justify-center"
+        >
+          <LogOut className="mr-2" /> Logout
         </button>
       </aside>
     </>
