@@ -41,7 +41,7 @@ const Landing = () => {
       {/* Centered content */}
       <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white z-20">
         <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
-          Asap Lounge
+          Asap <span className="text-pink-300 font-serif">Lounge</span>
         </h1>
         <p className="max-w-xl text-lg md:text-xl text-gray-200 mb-6 px-4">
           <Sparkles className="inline-block w-6 h-6 text-pink-400 mr-2" />

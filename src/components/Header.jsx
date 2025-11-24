@@ -7,7 +7,7 @@ const Header = () => {
       <div
         className="
           bg-pink-600 
-          p-6 
+          p-5 md:p-6 
           rounded-full 
           text-gray-100 
           hover:scale-110 
@@ -18,7 +18,7 @@ const Header = () => {
         "
         aria-label="Food Icon"
       >
-        <UtensilsCrossed size={50} /> 
+        <UtensilsCrossed size={40} /> 
       </div>
     </div>
   );

@@ -38,7 +38,7 @@ const Register = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-900 px-4">
       <Header />
-      <h2 className="text-4xl font-bold tracking-wide text-gray-200 mb-6">
+      <h2 className="text-2xl md:text-4xl font-bold tracking-wide text-gray-200 mb-2 md:mb-4">
         Register
       </h2>
 
@@ -48,13 +48,10 @@ const Register = () => {
       >
         {/* Username */}
         <div className="flex flex-col">
-          <label htmlFor="username" className="font-semibold text-gray-200 mb-1">
-            Username
-          </label>
           <input
             id="username"
             type="text"
-            placeholder="Username"
+            placeholder="Your_name"
             className={borderStyles}
             {...register("username")}
           />
@@ -65,9 +62,7 @@ const Register = () => {
 
         {/* Email */}
         <div className="flex flex-col">
-          <label htmlFor="email" className="font-semibold text-gray-200 mb-1">
-            Email
-          </label>
+       
           <input
             id="email"
             type="text"
@@ -82,9 +77,7 @@ const Register = () => {
 
         {/* Password */}
         <div className="flex flex-col">
-          <label htmlFor="password" className="font-semibold text-gray-200 mb-1">
-            Password
-          </label>
+         
           <input
             id="password"
             type="password"
@@ -99,9 +92,7 @@ const Register = () => {
 
         {/* Confirm Password */}
         <div className="flex flex-col">
-          <label htmlFor="confirmPassword" className="font-semibold text-gray-200 mb-1">
-            Confirm Password
-          </label>
+        
           <input
             id="confirmPassword"
             type="password"
@@ -124,7 +115,7 @@ const Register = () => {
       </form>
 
       {/* Links */}
-      <div className="mt-4 text-gray-400 text-sm">
+      <div className=" my-2 text-gray-400 text-sm">
         Already have an account?{" "}
         <Link to="/login" className="text-pink-500 hover:underline">
           Login
