@@ -18,7 +18,6 @@ import Admin from './pages/Admin';
 import AdminLayout from './layout/AdminLayout';
 import AdminSettings from './pages/AdminSettings';
 
-
 const App = () => {
   return (
     <BrowserRouter>

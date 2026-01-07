@@ -7,7 +7,7 @@ const Header = () => {
       <div
         className="
           bg-pink-600 
-          p-5 md:p-6 
+          p-7 
           rounded-full 
           text-gray-100 
           hover:scale-110 
@@ -25,3 +25,4 @@ const Header = () => {
 };
 
 export default Header;
+
