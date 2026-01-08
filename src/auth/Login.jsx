@@ -58,13 +58,13 @@ const Login = () => {
   return (
     <div
       className="flex flex-col items-center justify-center min-h-screen
-     bg-gradient-to-tr from-neutral-900 via-neutral-800 to-neutral-900 px-4"
-    >
-      <h2 className={`text-7xl font-extrabold tracking-wide 
+     bg-gradient-to-tr from-neutral-900 via-neutral-800 to-neutral-900 px-4">
+      <h2 className={`text-8xl font-extrabold tracking-wide 
         my-6 text-center drop-shadow-lg ${textStyle}`}>
         Login
       </h2>
-
+  
+       
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-lg grid gap-5 bg-neutral-800 p-8 rounded-2xl 

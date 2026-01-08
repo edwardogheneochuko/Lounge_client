@@ -20,12 +20,8 @@ const Register = () => {
     transition-all duration-300 hover:border-pink-400 hover:ring-pink-500`;
 
   const textStyle = `
-    bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500
-    bg-clip-text text-transparent
-    font-bold
-    hover:drop-shadow-[0_0_16px_rgba(168,85,247,0.9)]
-    transition-all duration-300
-    hover:scale-105
+    bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent
+    font-bold hover:drop-shadow-[0_0_16px_rgba(168,85,247,0.9)] transition-all duration-300 hover:scale-105
   `;
 
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -46,10 +42,12 @@ const Register = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-tr from-neutral-900 via-neutral-800 to-neutral-900 px-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-tr
+     from-neutral-900 via-neutral-800 to-neutral-900 px-4">
 
       <h2 className={`text-7xl font-extrabold tracking-wide 
-        my-6 text-center drop-shadow-lg ${textStyle}`}>Register
+        my-6 text-center drop-shadow-lg ${textStyle}`}>
+          Register
       </h2>
 
       <form
@@ -57,7 +55,7 @@ const Register = () => {
         className="w-full max-w-lg grid gap-5 bg-neutral-800 p-8 rounded-2xl 
           shadow-[0_0_30px_rgba(168,85,247,0.5)] hover:shadow-[0_0_50px_rgba(168,85,247,0.7)]
           transition-shadow duration-500"
-      >
+          >
         <div className="flex flex-col">
           <input
             id="username"

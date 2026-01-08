@@ -21,13 +21,13 @@ const ShopNav = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full bg-white z-50 transition-shadow ${
-        scrolled ? "shadow-lg" : "shadow-md"
+      className={`fixed top-0 left-0 w-full z-50 transition-shadow ${
+        scrolled ? "shadow-lg bg-gray-300 " : "shadow-md bg-gray-100"
       }`}
     >
       <div className="px-6 py-4 flex justify-between items-center max-w-7xl mx-auto">
         <Link to='/shop'
-          className="text-2xl font-bold text-green-600 hover:text-green-700 transition"
+          className="text-2xl font-bold text-neutral-700 hover:text-neutral-800 transition"
         >
           🛍️ MyShop
         </Link>

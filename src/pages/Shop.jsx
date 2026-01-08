@@ -15,7 +15,7 @@ const Shop = () => {
         const res = await api.get("/products");
         setProducts(res.data);
       } catch (err) {
-        console.error("❌ Failed to fetch products:", err);
+        console.error(" Failed to fetch products:", err);
       } finally {
         setLoading(false);
       }
@@ -23,15 +23,14 @@ const Shop = () => {
     fetchProducts();
   }, []); 
 
-  // Helper to get product quantity in cart
   const getQty = (id) => cart.find((item) => item._id === id)?.quantity || 0;
 
   return (
     <>
       <ShopNav />
 
-      <main className="max-w-7xl mx-auto px-6 py-28">
-        <div className="flex items-center justify-between mb-10">
+      <main className="max-w-7xl mx-auto px-6 py-28 bg-gray-50">
+        <div className="flex items-center justify-between mb-10 ">
           <h1 className="text-3xl font-bold text-gray-900">🛒 Our Products</h1>
           <p className="text-gray-500">{products.length} items available</p>
         </div>
