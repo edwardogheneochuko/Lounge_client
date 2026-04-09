@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { ShoppingCart, LogOut, User, Menu, X, Package, Settings } from "lucide-react";
+import {
+  ShoppingCart,
+  LogOut,
+  User,
+  Menu,
+  X,
+  Package,
+  Settings,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import useAuthStore from "../store/authStore";
 import useCartStore from "../store/cartStore";
 
 const ShopNav = () => {
-
   const { user, logout } = useAuthStore();
   const { cart } = useCartStore();
+
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -19,45 +27,42 @@ const ShopNav = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const navBg = scrolled ? "bg-gray-200 shadow-lg" : "bg-gray-100 shadow-sm";
+
+  const closeMenu = () => setIsOpen(false);
+
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-shadow ${
-        scrolled ? "shadow-lg bg-gray-300 " : "shadow-md bg-gray-100"
-      }`}
-    >
-      <div className="px-6 py-4 flex justify-between items-center max-w-7xl mx-auto">
-        <Link to='/shop'
-          className="text-2xl font-bold text-neutral-700 hover:text-neutral-800 transition"
+    <nav className={`fixed top-0 left-0 w-full z-50 transition ${navBg}`}>
+      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+        {/* Logo */}
+        <Link
+          to="/shop"
+          className="text-2xl font-bold text-neutral-700 hover:text-neutral-900"
         >
-          🛍️ MyShop
+          MyShop
         </Link>
 
+        {/* DESKTOP */}
         <div className="hidden md:flex items-center gap-6">
-          <Link
-            to="/cart"
-            className="relative flex items-center gap-1 hover:text-green-600 transition"
-          >
+
+          <Link to="/cart" className="relative">
             <ShoppingCart className="w-6 h-6" />
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs
-               px-2 py-0.5 rounded-full">
+              <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
                 {cartCount}
               </span>
             )}
           </Link>
-          
-          <Link to='/settings' className="relative flex items-center hover:text-green-600 
-          transition"> 
-          <Settings />
+
+          <Link to="/settings" className="hover:text-green-600">
+            <Settings />
           </Link>
 
           {user && (
-            <Link
-              to="/my-orders"
-              className="flex items-center gap-1 hover:text-green-600 transition"
-            >
+            <Link to="/my-orders" className="flex items-center gap-1 hover:text-green-600">
               <Package className="w-5 h-5" />
-              <span>My Orders</span>
+              My Orders
             </Link>
           )}
 
@@ -65,14 +70,14 @@ const ShopNav = () => {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-gray-100">
                 <User className="w-4 h-4 text-gray-600" />
-                <span className="text-gray-700 text-sm truncate max-w-[120px]">
+                <span className="text-sm text-gray-700 truncate max-w-[120px]">
                   {user.email}
                 </span>
               </div>
+
               <button
                 onClick={logout}
-                className="flex items-center gap-2 px-3 py-1 rounded-md bg-red-600 cursor-pointer
-                 text-white hover:bg-red-700 transition"
+                className="flex items-center gap-2 px-3 py-1 rounded-md bg-red-600 text-white hover:bg-red-700"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
@@ -81,19 +86,17 @@ const ShopNav = () => {
           ) : (
             <Link
               to="/login"
-              className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 transition"
+              className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700"
             >
               Login
             </Link>
           )}
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <div className="flex items-center gap-4 md:hidden">
-          <Link
-            to="/cart"
-            className="relative flex items-center hover:text-green-600 transition"
-          >
+        {/* MOBILE */}
+        <div className="md:hidden flex items-center gap-4">
+
+          <Link to="/cart">
             <ShoppingCart className="w-6 h-6" />
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
@@ -101,27 +104,26 @@ const ShopNav = () => {
               </span>
             )}
           </Link>
-          <Link to='/settings' className="relative flex items-center hover:text-green-600 
-          transition"> 
-          <Settings />
+
+          <Link to="/settings">
+            <Settings />
           </Link>
-          <button
-            className="text-gray-700 cursor-pointer"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+
+          <button onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <X /> : <Menu />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* MOBILE MENU */}
       {isOpen && (
-        <div className="md:hidden bg-white border-t shadow-md flex flex-col gap-4 px-6 py-4 animate-fadeIn">
+        <div className="md:hidden bg-white border-t shadow-md px-6 py-4 flex flex-col gap-4">
+
           {user && (
             <Link
               to="/my-orders"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center gap-2 hover:text-green-600 transition"
+              onClick={closeMenu}
+              className="flex items-center gap-2 hover:text-green-600"
             >
               <Package className="w-5 h-5" />
               My Orders
@@ -130,19 +132,17 @@ const ShopNav = () => {
 
           {user ? (
             <>
-              <div className="flex items-center gap-2 p-3 rounded-md bg-gray-100">
+              <div className="flex items-center gap-2 p-3 bg-gray-100 rounded-md">
                 <User className="w-4 h-4 text-gray-600" />
-                <span className="text-gray-700 text-sm truncate">
-                  {user.email}
-                </span>
+                <span className="text-sm truncate">{user.email}</span>
               </div>
+
               <button
                 onClick={() => {
                   logout();
-                  setIsOpen(false);
+                  closeMenu();
                 }}
-                className="flex items-center gap-2 px-3 py-1 rounded-md bg-red-600
-            text-white hover:bg-red-700 transition mt-1 w-fit mx-auto cursor-pointer"
+                className="flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-md w-fit mx-auto"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
@@ -151,8 +151,8 @@ const ShopNav = () => {
           ) : (
             <Link
               to="/login"
-              onClick={() => setIsOpen(false)}
-              className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 transition"
+              onClick={closeMenu}
+              className="px-4 py-2 bg-green-600 text-white rounded-md text-center"
             >
               Login
             </Link>

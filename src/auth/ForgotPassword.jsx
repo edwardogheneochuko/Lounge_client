@@ -51,65 +51,87 @@ const ForgotPassword = () => {
     }
   };
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-tr from-neutral-900 via-neutral-800 to-neutral-900 px-4">
+ return (
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 px-4">
 
-      {/* Title */}
-      <h2 className={`text-6xl font-extrabold tracking-wide my-6 text-center drop-shadow-lg ${textStyle}`}>
-        Forgot Password
-      </h2>
+    {/* background glow */}
+    <div className="absolute w-[500px] h-[500px] bg-pink-500/20 blur-[120px] rounded-full top-10 left-10" />
+    <div className="absolute w-[500px] h-[500px] bg-indigo-500/20 blur-[120px] rounded-full bottom-10 right-10" />
 
-      {/* Form */}
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-md grid gap-5 bg-neutral-800 p-8 rounded-2xl 
-          shadow-[0_0_30px_rgba(168,85,247,0.5)] hover:shadow-[0_0_50px_rgba(168,85,247,0.7)]
-          transition-shadow duration-500"
-      >
-        {/* Email */}
-        <div className="flex flex-col">
-          <label htmlFor="email" className="font-semibold text-gray-200 mb-1">
-            Email
-          </label>
-          <input
-            id="email"
-            type="text"
-            placeholder="your-email@gmail.com"
-            className={borderStyles}
-            {...register("email")}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-          )}
+    {/* card */}
+    <div className="relative w-full max-w-md">
+
+      <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl shadow-2xl p-8">
+
+        {/* header */}
+        <div className="text-center mb-8">
+          <h2 className="text-4xl font-extrabold text-white">
+            Reset Password
+          </h2>
+          <p className="text-gray-400 text-sm mt-2">
+            Enter your email and we’ll send a reset link
+          </p>
         </div>
 
-        {/* Server messages */}
-        {serverMessage && (
-          <p
-            className={`text-center font-medium ${
-              serverMessage.toLowerCase().includes("sent")
-                ? "text-green-600"
-                : "text-red-600"
-            } animate-shake`}
+        {/* form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+
+          {/* email */}
+          <div>
+            <label className="text-gray-300 text-sm">Email</label>
+            <input
+              type="text"
+              placeholder="you@example.com"
+              className="
+                w-full mt-1 px-4 py-3 rounded-xl
+                bg-white/5 border border-white/10
+                text-white placeholder-gray-500
+                focus:outline-none focus:ring-2 focus:ring-pink-500
+                transition
+              "
+              {...register("email")}
+            />
+
+            {errors.email && (
+              <p className="text-red-400 text-xs mt-1">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
+
+          {/* server message */}
+          {serverMessage && (
+            <div
+              className={`text-sm p-3 rounded-xl text-center border
+                ${
+                  serverMessage.toLowerCase().includes("sent")
+                    ? "bg-green-500/10 border-green-500/30 text-green-400"
+                    : "bg-red-500/10 border-red-500/30 text-red-400"
+                }
+              `}
+            >
+              {serverMessage}
+            </div>
+          )}
+
+          {/* submit */}
+          <SubmitBtn title="Send Reset Link" loading={loading} />
+        </form>
+
+        {/* footer */}
+        <div className="mt-6 text-center">
+          <Link
+            to="/login"
+            className="text-sm text-pink-400 hover:text-pink-300 transition font-medium"
           >
-            {serverMessage}
-          </p>
-        )}
+            ← Back to Login
+          </Link>
+        </div>
 
-        {/* Submit */}
-        <SubmitBtn title="Send Reset Link" loading={loading} />
-      </form>
-
-      {/* Links */}
-      <Link
-        to="/login"
-        className={`mt-6 text-sm font-semibold ${isMdUp ? textStyle : "text-pink-500"} hover:underline`}
-      >
-        Back to Login
-      </Link>
-
+      </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default ForgotPassword;
